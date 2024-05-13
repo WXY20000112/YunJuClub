@@ -19,18 +19,17 @@
 
     <dependencies>
 
+        <!-- jdbc 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
         <!-- HikariCP连接池依赖 -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.1.0</version>
-        </dependency>
-
-        <!-- mybatis-flex依赖 -->
-        <dependency>
-            <groupId>com.mybatis-flex</groupId>
-            <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
-            <version>1.8.9</version>
         </dependency>
 
         <!-- mysql驱动依赖 -->

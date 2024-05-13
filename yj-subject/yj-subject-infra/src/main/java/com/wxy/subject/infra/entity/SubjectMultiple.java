@@ -1,5 +1,9 @@
 package com.wxy.subject.infra.entity;
 
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
+import com.wxy.subject.common.listener.MyInsertAndUpdateListener;
 import lombok.Data;
 
 import java.io.Serial;
@@ -13,6 +17,9 @@ import java.util.Date;
  * @create: 2024-05-13 11:43
  */
 @Data
+@Table(value = "subject_multiple",
+        onInsert = MyInsertAndUpdateListener.class,
+        onUpdate = MyInsertAndUpdateListener.class)
 public class SubjectMultiple implements Serializable {
 
     @Serial
@@ -21,6 +28,7 @@ public class SubjectMultiple implements Serializable {
     /**
      * 主键
      */
+    @Id(keyType = KeyType.None)
     private Long id;
 
     /**

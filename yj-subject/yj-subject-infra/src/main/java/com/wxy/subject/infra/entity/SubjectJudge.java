@@ -1,5 +1,9 @@
 package com.wxy.subject.infra.entity;
 
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
+import com.wxy.subject.common.listener.MyInsertAndUpdateListener;
 import lombok.Data;
 
 import java.io.Serial;
@@ -13,13 +17,18 @@ import java.util.Date;
  * @create: 2024-05-13 11:38
  */
 @Data
+@Table(value = "subject_judge",
+        onInsert = MyInsertAndUpdateListener.class,
+        onUpdate = MyInsertAndUpdateListener.class)
 public class SubjectJudge implements Serializable {
+
     @Serial
     private static final long serialVersionUID = -89009200151001273L;
 
     /**
      * 主键
      */
+    @Id(keyType = KeyType.None)
     private Long id;
 
     /**
@@ -31,6 +40,11 @@ public class SubjectJudge implements Serializable {
      * 是否正确
      */
     private Integer isCorrect;
+
+    /**
+     * 创建人
+     */
+    private Date createUser;
 
     /**
      * 创建时间
