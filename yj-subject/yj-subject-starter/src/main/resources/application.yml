@@ -1,0 +1,17 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.200.129:3306/yunju-subject?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 156832zxc@
+    type: com.zaxxer.hikari.HikariDataSource
+logging:
+  config: classpath:log4j2-spring.xml
+mybatis-flex:
+  mapper-locations: classpath*:/mapper/*.xml
+  global-config:
+    key-config:
+      key-type: generator
+      value: snowFlakeId
