@@ -30,12 +30,12 @@ public class SubjectMultipleBO implements Serializable {
     /**
      * 题目类型
      */
-    private Integer multipleType;
+    private Integer optionType;
 
     /**
      * 选项内容
      */
-    private String multipleContent;
+    private String optionContent;
 
     /**
      * 是否正确

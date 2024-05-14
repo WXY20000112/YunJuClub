@@ -30,12 +30,12 @@ public class SubjectRadioBO implements Serializable {
     /**
      * 选项类型
      */
-    private Integer radioType;
+    private Integer optionType;
 
     /**
      * 选项内容
      */
-    private String radioContent;
+    private String optionContent;
 
     /**
      * 是否正确

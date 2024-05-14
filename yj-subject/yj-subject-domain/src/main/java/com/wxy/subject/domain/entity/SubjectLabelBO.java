@@ -30,7 +30,7 @@ public class SubjectLabelBO implements Serializable {
     /**
      * 标签排序
      */
-    private Integer labelSort;
+    private Integer sortNum;
 
     /**
      * 是否删除 0为未删除 1为已删除

@@ -11,6 +11,8 @@ logging:
   config: classpath:log4j2-spring.xml
 mybatis-flex:
   mapper-locations: classpath*:/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     key-config:
       key-type: generator

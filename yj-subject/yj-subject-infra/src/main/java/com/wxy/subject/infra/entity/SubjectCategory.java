@@ -44,7 +44,7 @@ public class SubjectCategory implements Serializable {
     /**
      * 分类图标
      */
-    private String categoryIcon;
+    private String imageUrl;
 
     /**
      * 分类所属的父级id
@@ -54,17 +54,17 @@ public class SubjectCategory implements Serializable {
     /**
      * 创建人
      */
-    private String createUser;
+    private String createdBy;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createdTime;
 
     /**
      * 修改人
      */
-    private String updateUser;
+    private String updateBy;
 
     /**
      * 修改时间

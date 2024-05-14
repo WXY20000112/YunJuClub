@@ -43,7 +43,7 @@ public class SubjectInfo implements Serializable {
     /**
      * 出题人
      */
-    private String subjectUser;
+    private String settleName;
 
     /**
      * 题目类型 1单选 2多选 3判断 4简答
@@ -63,17 +63,17 @@ public class SubjectInfo implements Serializable {
     /**
      * 创建人
      */
-    private String createUser;
+    private String createdBy;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createdTime;
 
     /**
      * 修改人
      */
-    private String updateUser;
+    private String updateBy;
 
     /**
      * 修改时间

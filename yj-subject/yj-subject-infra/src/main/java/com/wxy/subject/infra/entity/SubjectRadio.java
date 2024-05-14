@@ -39,12 +39,12 @@ public class SubjectRadio implements Serializable {
     /**
      * 选项类型
      */
-    private Integer radioType;
+    private Integer optionType;
 
     /**
      * 选项内容
      */
-    private String radioContent;
+    private String optionContent;
 
     /**
      * 是否正确
@@ -54,17 +54,17 @@ public class SubjectRadio implements Serializable {
     /**
      * 创建人
      */
-    private String createUser;
+    private String createdBy;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createdTime;
 
     /**
      * 修改人
      */
-    private String updateUser;
+    private String updateBy;
 
     /**
      * 修改时间

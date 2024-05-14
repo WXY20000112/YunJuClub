@@ -1,4 +1,4 @@
-package com.wxy.subject.domain.entity;
+package com.wxy.application.dto;
 
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @create: 2024-05-13 11:31
  */
 @Data
-public class SubjectCategoryBO implements Serializable {
+public class SubjectCategoryDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -71389453845520999L;

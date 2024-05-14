@@ -43,16 +43,16 @@ public class MyInsertAndUpdateListener implements InsertListener, UpdateListener
 
         // 2、获取setCreateTime、setUpdateTime、setCreateUser、SetUpdateUser方法
         // 其中第二个参数是要获取的方法的参数类型，有多个用逗号分隔即可
-        Method setCreateTime = objectClass.getDeclaredMethod("setCreateTime", Date.class);
+        Method setCreatedTime = objectClass.getDeclaredMethod("setCreatedTime", Date.class);
         Method setUpdateTime = objectClass.getDeclaredMethod("setUpdateTime", Date.class);
-        Method setCreateUser = objectClass.getDeclaredMethod("setCreateUser", String.class);
-        Method setUpdateUser = objectClass.getDeclaredMethod("setUpdateUser", String.class);
+        Method setCreatedBy = objectClass.getDeclaredMethod("setCreatedBy", String.class);
+        Method setUpdateBy = objectClass.getDeclaredMethod("setUpdateBy", String.class);
 
         // 3、调用invoke方法执行获取到的类方法，设置字段值
-        setCreateTime.invoke(object, new Date());
+        setCreatedTime.invoke(object, new Date());
         setUpdateTime.invoke(object, new Date());
-        setCreateUser.invoke(object, "wxy");
-        setUpdateUser.invoke(object, "wxy");
+        setCreatedBy.invoke(object, "wxy");
+        setUpdateBy.invoke(object, "wxy");
     }
 
     /**
@@ -71,10 +71,10 @@ public class MyInsertAndUpdateListener implements InsertListener, UpdateListener
         // 2、获取setCreateTime、setUpdateTime、setCreateUser、SetUpdateUser方法
         // 其中第二个参数是要获取的方法的参数类型，有多个用逗号分隔即可
         Method setUpdateTime = objectClass.getDeclaredMethod("setUpdateTime", Date.class);
-        Method setUpdateUser = objectClass.getDeclaredMethod("setUpdateUser", String.class);
+        Method setUpdateBy = objectClass.getDeclaredMethod("setUpdateBy", String.class);
 
         // 3、调用invoke方法执行获取到的类方法，设置字段值
         setUpdateTime.invoke(object, new Date());
-        setUpdateUser.invoke(object, "wxy");
+        setUpdateBy.invoke(object, "wxy");
     }
 }

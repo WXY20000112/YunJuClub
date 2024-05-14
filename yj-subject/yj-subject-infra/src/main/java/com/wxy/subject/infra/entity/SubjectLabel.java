@@ -39,22 +39,22 @@ public class SubjectLabel implements Serializable {
     /**
      * 标签排序
      */
-    private Integer labelSort;
+    private Integer sortNum;
 
     /**
      * 创建人
      */
-    private String createUser;
+    private String createdBy;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private Date createdTime;
 
     /**
      * 修改人
      */
-    private String updateUser;
+    private String updateBy;
 
     /**
      * 修改时间

@@ -68,6 +68,14 @@
             <version>1.8.9</version>
         </dependency>
 
+        <!-- mybatis-flex注解处理器依赖 -->
+        <dependency>
+            <groupId>com.mybatis-flex</groupId>
+            <artifactId>mybatis-flex-processor</artifactId>
+            <version>1.8.9</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
 </project>
