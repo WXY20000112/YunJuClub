@@ -17,4 +17,13 @@ public interface SubjectCategoryDomainService{
 
     // 查询一级分类
     List<SubjectCategoryBO> queryPrimaryCategory(SubjectCategoryBO subjectCategoryBO);
+
+    // 根据分类id查询标签列表
+    List<SubjectCategoryBO> getLabelByCategoryId(SubjectCategoryBO subjectCategoryBO);
+
+    // 修改分类
+    Boolean updateCategory(SubjectCategoryBO subjectCategoryBO);
+
+    // 删除分类
+    Boolean deleteCategory(SubjectCategoryBO subjectCategoryBO);
 }

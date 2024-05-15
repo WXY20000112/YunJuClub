@@ -18,4 +18,13 @@ public interface SubjectCategoryService extends IService<SubjectCategory> {
 
     // 获取二级分类数量
     Integer getSecondCategoryCount(Long id);
+
+    // 更新分类
+    Boolean updateCategory(SubjectCategory subjectCategory);
+
+    // 添加分类
+    Boolean insertCategory(SubjectCategory subjectCategory);
+
+    // 删除分类
+    Boolean deleteCategory(SubjectCategory subjectCategory);
 }

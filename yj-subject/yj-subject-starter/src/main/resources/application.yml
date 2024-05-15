@@ -17,3 +17,4 @@ mybatis-flex:
     key-config:
       key-type: generator
       value: snowFlakeId
+    logic-delete-column: is_deleted

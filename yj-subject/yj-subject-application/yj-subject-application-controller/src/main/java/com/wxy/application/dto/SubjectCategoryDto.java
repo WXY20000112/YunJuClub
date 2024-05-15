@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @program: YunJuClub-Flex
@@ -51,4 +52,9 @@ public class SubjectCategoryDto implements Serializable {
      * 分类下二级分类数量
      */
     private Integer count;
+
+    /**
+     * 分类下标签信息
+     */
+    private List<SubjectLabelDto> subjectLabelDtoList;
 }

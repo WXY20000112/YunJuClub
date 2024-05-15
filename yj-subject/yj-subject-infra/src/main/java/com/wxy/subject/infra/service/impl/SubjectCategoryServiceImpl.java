@@ -7,6 +7,7 @@ import com.wxy.subject.common.enums.IsDeletedEnum;
 import com.wxy.subject.infra.entity.SubjectCategory;
 import com.wxy.subject.infra.mapper.SubjectCategoryMapper;
 import com.wxy.subject.infra.service.SubjectCategoryService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,45 @@ import static com.wxy.subject.infra.entity.table.SubjectCategoryTableDef.SUBJECT
 public class SubjectCategoryServiceImpl
         extends ServiceImpl<SubjectCategoryMapper, SubjectCategory>
         implements SubjectCategoryService {
+
+    @Resource
+    private SubjectCategoryMapper subjectCategoryMapper;
+
+    /**
+     * @author: 32115
+     * @description: 删除分类 逻辑删除
+     * @date: 2024/5/15
+     * @param: subjectCategory
+     * @return: boolean
+     */
+    @Override
+    public Boolean deleteCategory(SubjectCategory subjectCategory) {
+        return subjectCategoryMapper.delete(subjectCategory) > 0;
+    }
+
+    /**
+     * @author: 32115
+     * @description: 添加分类
+     * @date: 2024/5/15
+     * @param: subjectCategory
+     * @return: Boolean
+     */
+    @Override
+    public Boolean insertCategory(SubjectCategory subjectCategory) {
+        return this.save(subjectCategory);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 更新分类
+     * @date: 2024/5/15
+     * @param: subjectCategory
+     * @return: boolean
+     */
+    @Override
+    public Boolean updateCategory(SubjectCategory subjectCategory) {
+        return this.updateById(subjectCategory);
+    }
 
     /**
      * @author: 32115
