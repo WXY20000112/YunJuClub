@@ -10,4 +10,6 @@ import com.wxy.subject.infra.entity.SubjectInfo;
  * @create: 2024-05-13 11:54
  */
 public interface SubjectInfoService extends IService<SubjectInfo> {
+    // 添加题目
+    Boolean addSubjectInfo(SubjectInfo subjectInfo);
 }

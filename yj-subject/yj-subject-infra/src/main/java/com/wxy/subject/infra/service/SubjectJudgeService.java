@@ -10,4 +10,7 @@ import com.wxy.subject.infra.entity.SubjectJudge;
  * @create: 2024-05-13 11:55
  */
 public interface SubjectJudgeService extends IService<SubjectJudge> {
+
+    // 添加判断题
+    Boolean addJudgeSubject(SubjectJudge subjectJudge);
 }

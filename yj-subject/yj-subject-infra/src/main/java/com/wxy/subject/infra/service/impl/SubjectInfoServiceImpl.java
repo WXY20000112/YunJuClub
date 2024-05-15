@@ -16,4 +16,16 @@ import org.springframework.stereotype.Service;
 public class SubjectInfoServiceImpl
         extends ServiceImpl<SubjectInfoMapper, SubjectInfo>
         implements SubjectInfoService {
+
+    /**
+     * @author: 32115
+     * @description: 添加题目
+     * @date: 2024/5/15
+     * @param: subjectInfo
+     * @return: Boolean
+     */
+    @Override
+    public Boolean addSubjectInfo(SubjectInfo subjectInfo) {
+        return this.save(subjectInfo);
+    }
 }

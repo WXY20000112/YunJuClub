@@ -25,6 +25,18 @@ public class SubjectMappingServiceImpl
 
     /**
      * @author: 32115
+     * @description: 批量添加映射关系
+     * @date: 2024/5/15
+     * @param: subjectMappingList
+     * @return: Boolean
+     */
+    @Override
+    public Boolean addSubjectMapping(List<SubjectMapping> subjectMappingList) {
+        return this.saveBatch(subjectMappingList);
+    }
+
+    /**
+     * @author: 32115
      * @description: 根据分类id查询映射关系
      * @date: 2024/5/15
      * @param: id

@@ -10,4 +10,7 @@ import com.wxy.subject.infra.entity.SubjectBrief;
  * @create: 2024-05-13 11:52
  */
 public interface SubjectBriefService extends IService<SubjectBrief> {
+
+    // 添加简答题
+    Boolean addBriefSubject(SubjectBrief subjectBrief);
 }

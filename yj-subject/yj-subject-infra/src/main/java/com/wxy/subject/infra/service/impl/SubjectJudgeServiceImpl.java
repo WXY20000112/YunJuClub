@@ -16,4 +16,16 @@ import org.springframework.stereotype.Service;
 public class SubjectJudgeServiceImpl
         extends ServiceImpl<SubjectJudgeMapper, SubjectJudge>
         implements SubjectJudgeService {
+
+    /**
+     * @author: 32115
+     * @description: 添加判断题
+     * @date: 2024/5/15
+     * @param: subjectJudge
+     * @return: Boolean
+     */
+    @Override
+    public Boolean addJudgeSubject(SubjectJudge subjectJudge) {
+        return this.save(subjectJudge);
+    }
 }

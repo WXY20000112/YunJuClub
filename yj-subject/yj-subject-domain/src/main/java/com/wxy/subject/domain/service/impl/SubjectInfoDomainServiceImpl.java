@@ -1,7 +1,20 @@
 package com.wxy.subject.domain.service.impl;
 
+import com.wxy.subject.domain.converter.SubjectInfoBOConverter;
+import com.wxy.subject.domain.entity.SubjectInfoBO;
+import com.wxy.subject.domain.handler.SubjectTypeFactory;
+import com.wxy.subject.domain.handler.SubjectTypeHandler;
 import com.wxy.subject.domain.service.SubjectInfoDomainService;
+import com.wxy.subject.infra.entity.SubjectInfo;
+import com.wxy.subject.infra.entity.SubjectMapping;
+import com.wxy.subject.infra.service.SubjectInfoService;
+import com.wxy.subject.infra.service.SubjectMappingService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @program: YunJuClub-Flex
@@ -11,4 +24,53 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
+
+    @Resource
+    private SubjectInfoService subjectInfoService;
+
+    @Resource
+    private SubjectTypeFactory subjectTypeFactory;
+
+    @Resource
+    private SubjectMappingService subjectMappingService;
+
+    /**
+     * @author: 32115
+     * @description: 添加题目
+     * @date: 2024/5/15
+     * @param: subjectInfoBO
+     * @return: Boolean
+     */
+    @Override
+    @Transactional
+    public Boolean addSubject(SubjectInfoBO subjectInfoBO) {
+        // Bo 转换成 info实体类
+        SubjectInfo subjectInfo = SubjectInfoBOConverter
+                .CONVERTER.converterBoToInfo(subjectInfoBO);
+        // 先将主表信息插入
+        Boolean infoResult = subjectInfoService.addSubjectInfo(subjectInfo);
+        // 工厂+策略模式进行单选、多选、判断、简答的添加
+        // 一个工厂 4中模式 根据传入的type值不同自动选择合适的映射类进行添加
+        // 通过工厂类传入type获取对应handler 执行相应添加方法
+        SubjectTypeHandler handler = subjectTypeFactory
+                .getHandler(subjectInfoBO.getSubjectType());
+        // 将主表添加后的id赋值给BO
+        subjectInfoBO.setId(subjectInfo.getId());
+        // 获取到handler后调用添加方法添加题目信息
+        Boolean handlerResult = handler.addSubject(subjectInfoBO);
+        // 接下来添加题目、分类、标签之间的关联关系
+        List<SubjectMapping> subjectMappingList = new ArrayList<>();
+        subjectInfoBO.getCategoryIds().forEach(categoryId ->
+                subjectInfoBO.getLabelIds().forEach(labelId -> {
+                    SubjectMapping subjectMapping = new SubjectMapping();
+                    // 设置分类id、题目id、标签id
+                    subjectMapping.setCategoryId(categoryId);
+                    subjectMapping.setSubjectId(subjectInfo.getId());
+                    subjectMapping.setLabelId(labelId);
+                    subjectMappingList.add(subjectMapping);
+                }));
+        // 批量插入关联关系
+        Boolean mappingResult = subjectMappingService.addSubjectMapping(subjectMappingList);
+        return infoResult && handlerResult && mappingResult;
+    }
 }

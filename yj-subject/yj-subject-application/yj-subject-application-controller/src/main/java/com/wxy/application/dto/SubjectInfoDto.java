@@ -1,4 +1,4 @@
-package com.wxy.subject.domain.entity;
+package com.wxy.application.dto;
 
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * @create: 2024-05-13 11:31
  */
 @Data
-public class SubjectInfoBO implements Serializable {
+public class SubjectInfoDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 649887552684579511L;
@@ -76,7 +76,7 @@ public class SubjectInfoBO implements Serializable {
     /**
      * 题目答案选项列表
      */
-    private List<SubjectOptionBO> optionBoList;
+    private List<SubjectOptionDto> optionList;
 
     /**
      * 题目所属分类id

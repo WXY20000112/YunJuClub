@@ -44,7 +44,7 @@ public class SubjectJudge implements Serializable {
     /**
      * 创建人
      */
-    private Date createdBy;
+    private String createdBy;
 
     /**
      * 创建时间

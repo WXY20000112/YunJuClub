@@ -13,6 +13,7 @@ import com.wxy.subject.infra.service.SubjectLabelService;
 import com.wxy.subject.infra.service.SubjectMappingService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      * @return: Boolean
      */
     @Override
+    @Transactional
     public Boolean add(SubjectCategoryBO subjectCategoryBO) {
         // BO转category实体类
         SubjectCategory subjectCategory = SubjectCategoryBOConverter
@@ -59,6 +61,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      * @return: boolean
      */
     @Override
+    @Transactional
     public Boolean deleteCategory(SubjectCategoryBO subjectCategoryBO) {
         // bo转实体类
         SubjectCategory subjectCategory = SubjectCategoryBOConverter
@@ -75,6 +78,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      * @return: boolean
      */
     @Override
+    @Transactional
     public Boolean updateCategory(SubjectCategoryBO subjectCategoryBO) {
         // bo转实体类
         SubjectCategory subjectCategory = SubjectCategoryBOConverter
