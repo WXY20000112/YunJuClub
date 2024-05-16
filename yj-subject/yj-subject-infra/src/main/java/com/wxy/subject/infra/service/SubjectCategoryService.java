@@ -27,4 +27,7 @@ public interface SubjectCategoryService extends IService<SubjectCategory> {
 
     // 删除分类
     Boolean deleteCategory(SubjectCategory subjectCategory);
+
+    // 根据分类id获取分类
+    SubjectCategory getCategoryById(Long categoryId);
 }

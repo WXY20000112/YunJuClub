@@ -95,6 +95,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      * @return: List<SubjectCategoryBO>
      */
     @Override
+    @Transactional
     public List<SubjectCategoryBO> getLabelByCategoryId(SubjectCategoryBO subjectCategoryBO) {
         // 根据一级分类id查询二级分类
         SubjectCategory subjectCategory = new SubjectCategory();
@@ -133,6 +134,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      * @return: List<SubjectCategoryBO>
      */
     @Override
+    @Transactional
     public List<SubjectCategoryBO> queryPrimaryCategory(SubjectCategoryBO subjectCategoryBO) {
         // bo转category
         SubjectCategory subjectCategory = SubjectCategoryBOConverter.CONVERTER

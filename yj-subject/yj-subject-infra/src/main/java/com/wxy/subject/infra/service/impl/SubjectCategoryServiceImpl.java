@@ -30,6 +30,18 @@ public class SubjectCategoryServiceImpl
 
     /**
      * @author: 32115
+     * @description: 根据id查询分类
+     * @date: 2024/5/16
+     * @param: categoryId
+     * @return: SubjectCategory
+     */
+    @Override
+    public SubjectCategory getCategoryById(Long categoryId) {
+        return this.getById(categoryId);
+    }
+
+    /**
+     * @author: 32115
      * @description: 删除分类 逻辑删除
      * @date: 2024/5/15
      * @param: subjectCategory

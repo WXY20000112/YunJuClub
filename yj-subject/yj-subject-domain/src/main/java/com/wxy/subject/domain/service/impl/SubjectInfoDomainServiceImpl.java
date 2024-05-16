@@ -49,6 +49,7 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
      * @return: SubjectInfoBO
      */
     @Override
+    @Transactional
     public SubjectInfoBO getSubjectInfo(SubjectInfoBO subjectInfoBO) {
         // 首先查询题目主表信息
         SubjectInfo subjectInfo = subjectInfoService.getSubjectInfoById(subjectInfoBO.getId());
@@ -77,6 +78,7 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
      * @return: Page<SubjectInfoBO>
      */
     @Override
+    @Transactional
     public Page<SubjectInfoBO> getSubjectPageList(SubjectInfoBO subjectInfoBO) {
         // BO 转换成 info实体类
         SubjectInfo subjectInfo = SubjectInfoBOConverter
