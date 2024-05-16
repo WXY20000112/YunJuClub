@@ -1,6 +1,7 @@
 package com.wxy.application.controller;
 
 import com.google.common.base.Preconditions;
+import com.mybatisflex.core.paginate.Page;
 import com.wxy.application.converter.SubjectInfoDtoConverter;
 import com.wxy.application.converter.SubjectOptionDtoConverter;
 import com.wxy.application.dto.SubjectInfoDto;
@@ -35,25 +36,70 @@ public class SubjectController {
      */
     @RequestMapping("/add")
     public Result<Boolean> addSubjectInfo(@RequestBody SubjectInfoDto subjectInfoDto) {
+        // 参数校验
+        Preconditions.checkNotNull(subjectInfoDto.getSubjectName(), "题目名称不能为空");
+        Preconditions.checkNotNull(subjectInfoDto.getSubjectDifficult(), "题目难易度不能为空");
+        Preconditions.checkNotNull(subjectInfoDto.getSubjectType(), "题目类型不能为空");
+        Preconditions.checkNotNull(subjectInfoDto.getSubjectScore(), "题目分数不能为空");
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(subjectInfoDto
+                .getCategoryIds()), "题目所属分类id不能为空");
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(subjectInfoDto
+                .getLabelIds()), "题目所属标签id不能为空");
+        // SubjectInfoDto 转换为 SubjectInfoBO
+        SubjectInfoBO subjectInfoBO = SubjectInfoDtoConverter
+                .CONVERTER.converterDtoToBo(subjectInfoDto);
+        // SubjectOptionsDto 转换为 SubjectOptionsBO
+        subjectInfoBO.setOptionList(SubjectOptionDtoConverter
+                .CONVERTER.converterDtoToBo(subjectInfoDto.getOptionList()));
+        // 添加题目
+        return subjectInfoDomainService
+                .addSubject(subjectInfoBO) ? Result.success(true) : Result.error();
+    }
 
-            // 参数校验
-            Preconditions.checkNotNull(subjectInfoDto.getSubjectName(), "题目名称不能为空");
-            Preconditions.checkNotNull(subjectInfoDto.getSubjectDifficult(), "题目难易度不能为空");
-            Preconditions.checkNotNull(subjectInfoDto.getSubjectType(), "题目类型不能为空");
-            Preconditions.checkNotNull(subjectInfoDto.getSubjectScore(), "题目分数不能为空");
-            Preconditions.checkArgument(!CollectionUtils.isEmpty(subjectInfoDto
-                    .getCategoryIds()), "题目所属分类id不能为空");
-            Preconditions.checkArgument(!CollectionUtils.isEmpty(subjectInfoDto
-                    .getLabelIds()), "题目所属标签id不能为空");
-            // SubjectInfoDto 转换为 SubjectInfoBO
-            SubjectInfoBO subjectInfoBO = SubjectInfoDtoConverter
-                    .CONVERTER.converterDtoToBo(subjectInfoDto);
-            // SubjectOptionsDto 转换为 SubjectOptionsBO
-            subjectInfoBO.setOptionBoList(SubjectOptionDtoConverter
-                    .CONVERTER.converterDtoToBo(subjectInfoDto.getOptionList()));
-            // 添加题目
-            return subjectInfoDomainService
-                    .addSubject(subjectInfoBO) ? Result.success(true) : Result.error();
+    /**
+     * @author: 32115
+     * @description: 分页查询题目列表
+     * @date: 2024/5/16
+     * @param: subjectInfoDto
+     * @return: Result<Page < SubjectInfoDto>>
+     */
+    @RequestMapping("/getSubjectPage")
+    public Result<Page<SubjectInfoDto>> getSubjectPageList(@RequestBody SubjectInfoDto subjectInfoDto) {
+        // 参数校验
+        Preconditions.checkNotNull(subjectInfoDto.getCategoryId(), "分类id不能为空");
+        Preconditions.checkNotNull(subjectInfoDto.getLabelId(), "标签id不能为空");
+        // DTO 转换 BO
+        SubjectInfoBO subjectInfoBO = SubjectInfoDtoConverter
+                .CONVERTER.converterDtoToBo(subjectInfoDto);
+        // 查询题目列表
+        Page<SubjectInfoBO> subjectInfoBOPage = subjectInfoDomainService
+                .getSubjectPageList(subjectInfoBO);
+        // BO 转换 DTO
+        Page<SubjectInfoDto> subjectInfoDtoPage = SubjectInfoDtoConverter
+                .CONVERTER.converterBoPageToDtoPage(subjectInfoBOPage);
+        return Result.success(subjectInfoDtoPage);
+    }
 
+    /**
+     * @author: 32115
+     * @description: 查询题目详情
+     * @date: 2024/5/16
+     * @param: subjectInfoDto
+     * @return: Result<SubjectInfoDto>
+     */
+    @RequestMapping("/querySubjectInfo")
+    public Result<SubjectInfoDto> getSubjectInfo(@RequestBody SubjectInfoDto subjectInfoDto){
+        // 参数校验
+        Preconditions.checkNotNull(subjectInfoDto.getId(), "id不能为空");
+        // DTO 转换 BO
+        SubjectInfoBO subjectInfoBO = SubjectInfoDtoConverter
+                .CONVERTER.converterDtoToBo(subjectInfoDto);
+        // 调用domain层service进行查询
+        SubjectInfoBO boResult = subjectInfoDomainService.getSubjectInfo(subjectInfoBO);
+        // BO 转换 DTO
+        SubjectInfoDto dtoResult = SubjectInfoDtoConverter
+                .CONVERTER.converterBoToDto(boResult);
+        // 返回结果
+        return Result.success(dtoResult);
     }
 }

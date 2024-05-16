@@ -2,6 +2,7 @@ package com.wxy.subject.domain.handler;
 
 import com.wxy.subject.common.constant.SubjectConstant;
 import com.wxy.subject.common.enums.SubjectTypeEnum;
+import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 import com.wxy.subject.infra.entity.SubjectBrief;
 import com.wxy.subject.infra.service.SubjectBriefService;
@@ -29,6 +30,23 @@ public class BriefHandler implements SubjectTypeHandler {
     @Override
     public SubjectTypeEnum getHandlerType() {
         return SubjectTypeEnum.BRIEF;
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据题目id获取简答题目内容
+     * @date: 2024/5/16
+     * @param: id
+     * @return: SubjectFactoryBO
+     */
+    @Override
+    public SubjectFactoryBO getBySubjectId(Long id) {
+        // 获取简答题内容
+        SubjectBrief subjectBrief = subjectBriefService.getBySubjectId(id);
+        // 封装成BO对象
+        SubjectFactoryBO subjectFactoryBO = new SubjectFactoryBO();
+        subjectFactoryBO.setSubjectAnswer(subjectBrief.getSubjectAnswer());
+        return subjectFactoryBO;
     }
 
     /**

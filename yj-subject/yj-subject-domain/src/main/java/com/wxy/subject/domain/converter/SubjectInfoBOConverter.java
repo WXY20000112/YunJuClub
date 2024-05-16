@@ -1,5 +1,7 @@
 package com.wxy.subject.domain.converter;
 
+import com.mybatisflex.core.paginate.Page;
+import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 import com.wxy.subject.infra.entity.SubjectInfo;
 import org.mapstruct.Mapper;
@@ -18,4 +20,10 @@ public interface SubjectInfoBOConverter {
 
     // SubjectInfoBO转SubjectInfo
     SubjectInfo converterBoToInfo(SubjectInfoBO subjectInfoBO);
+
+    // SubjectInfoPage转SubjectInfoBOPage
+    Page<SubjectInfoBO> converterInfoPageToBoPage(Page<SubjectInfo> subjectInfoPage);
+
+    // SubjectInfo和SubjectFactoryBo转SubjectInfoBO
+    SubjectInfoBO convertInfoAndFactoryBoToBo(SubjectFactoryBO subjectFactoryBO, SubjectInfo subjectInfo);
 }

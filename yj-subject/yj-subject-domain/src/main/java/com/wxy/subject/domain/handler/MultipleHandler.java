@@ -1,7 +1,9 @@
 package com.wxy.subject.domain.handler;
 
 import com.wxy.subject.common.enums.SubjectTypeEnum;
+import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
+import com.wxy.subject.domain.entity.SubjectOptionBO;
 import com.wxy.subject.infra.entity.SubjectMultiple;
 import com.wxy.subject.infra.service.SubjectMultipleService;
 import jakarta.annotation.Resource;
@@ -35,6 +37,31 @@ public class MultipleHandler implements SubjectTypeHandler {
 
     /**
      * @author: 32115
+     * @description: 根据题目id获取多选题目信息
+     * @date: 2024/5/16
+     * @param: id
+     * @return: SubjectFactoryBO
+     */
+    @Override
+    public SubjectFactoryBO getBySubjectId(Long id) {
+        // 根据subjectId查询信息
+        List<SubjectMultiple> subjectMultipleList =
+                subjectMultipleService.getBySubjectId(id);
+        SubjectFactoryBO subjectFactoryBO = new SubjectFactoryBO();
+        // 将multiple转为optionBo
+        List<SubjectOptionBO> optionBOList = subjectMultipleList.stream().map(subjectMultiple -> {
+            SubjectOptionBO subjectOptionBO = new SubjectOptionBO();
+            subjectOptionBO.setOptionType(subjectMultiple.getOptionType());
+            subjectOptionBO.setOptionContent(subjectMultiple.getOptionContent());
+            subjectOptionBO.setIsCorrect(subjectMultiple.getIsCorrect());
+            return subjectOptionBO;
+        }).toList();
+        subjectFactoryBO.setOptionList(optionBOList);
+        return subjectFactoryBO;
+    }
+
+    /**
+     * @author: 32115
      * @description: 添加多选题目
      * @date: 2024/5/15
      * @param: subjectInfoBO
@@ -43,9 +70,9 @@ public class MultipleHandler implements SubjectTypeHandler {
     @Override
     public Boolean addSubject(SubjectInfoBO subjectInfoBO) {
         // 校验答案内容是否为空
-        if (CollectionUtils.isEmpty(subjectInfoBO.getOptionBoList())) return false;
+        if (CollectionUtils.isEmpty(subjectInfoBO.getOptionList())) return false;
         // 使用集合存储多选题选项信息 一个选项对应一个Multiple对象
-        List<SubjectMultiple> subjectMultipleList = subjectInfoBO.getOptionBoList().stream()
+        List<SubjectMultiple> subjectMultipleList = subjectInfoBO.getOptionList().stream()
                 .map(subjectOptionBO -> {
                     SubjectMultiple subjectMultiple = new SubjectMultiple();
                     // 设置选项内容

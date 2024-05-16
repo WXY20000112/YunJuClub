@@ -1,5 +1,6 @@
 package com.wxy.application.converter;
 
+import com.mybatisflex.core.paginate.Page;
 import com.wxy.application.dto.SubjectInfoDto;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 import org.mapstruct.Mapper;
@@ -21,6 +22,12 @@ public interface SubjectInfoDtoConverter {
     // SubjectInfoDto 转换 SubjectInfoBO
     SubjectInfoBO converterDtoToBo(SubjectInfoDto subjectInfoDto);
 
+    // SubjectInfoBOList 转换 SubjectInfoDtoList
+    List<SubjectInfoDto> converterBoListToDtoList(List<SubjectInfoBO> subjectInfoBOList);
+
+    // SubjectInfoPageBO 转换 SubjectInfoPageDto
+    Page<SubjectInfoDto> converterBoPageToDtoPage(Page<SubjectInfoBO> subjectInfoBOPage);
+
     // SubjectInfoBO 转换 SubjectInfoDto
-    List<SubjectInfoDto> converterBoToDto(List<SubjectInfoBO> subjectInfoBOList);
+    SubjectInfoDto converterBoToDto(SubjectInfoBO subjectInfoBO);
 }

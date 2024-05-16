@@ -13,4 +13,7 @@ public interface SubjectJudgeService extends IService<SubjectJudge> {
 
     // 添加判断题
     Boolean addJudgeSubject(SubjectJudge subjectJudge);
+
+    // 根据id查询判断题
+    SubjectJudge getBySubjectId(Long id);
 }

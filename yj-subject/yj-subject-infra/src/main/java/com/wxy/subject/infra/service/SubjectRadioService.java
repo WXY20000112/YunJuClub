@@ -15,4 +15,7 @@ public interface SubjectRadioService extends IService<SubjectRadio> {
 
     // 添加单选题
     Boolean addRadioSubject(List<SubjectRadio> subjectRadioList);
+
+    // 根据题目id查询单选题
+    List<SubjectRadio> getBySubjectId(Long id);
 }

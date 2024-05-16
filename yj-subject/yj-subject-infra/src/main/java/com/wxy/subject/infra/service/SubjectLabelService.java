@@ -15,4 +15,7 @@ public interface SubjectLabelService extends IService<SubjectLabel> {
 
     // 根据id查询标签
     List<SubjectLabel> getLabelById(List<Long> labelIdList);
+
+    // 根据题目id查询标签
+    List<SubjectLabel> getLabelBySubjectId(Long id);
 }

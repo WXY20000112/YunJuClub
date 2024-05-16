@@ -1,13 +1,17 @@
 package com.wxy.subject.domain.service.impl;
 
+import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.domain.converter.SubjectInfoBOConverter;
+import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 import com.wxy.subject.domain.handler.SubjectTypeFactory;
 import com.wxy.subject.domain.handler.SubjectTypeHandler;
 import com.wxy.subject.domain.service.SubjectInfoDomainService;
 import com.wxy.subject.infra.entity.SubjectInfo;
+import com.wxy.subject.infra.entity.SubjectLabel;
 import com.wxy.subject.infra.entity.SubjectMapping;
 import com.wxy.subject.infra.service.SubjectInfoService;
+import com.wxy.subject.infra.service.SubjectLabelService;
 import com.wxy.subject.infra.service.SubjectMappingService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -33,6 +37,58 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
 
     @Resource
     private SubjectMappingService subjectMappingService;
+
+    @Resource
+    private SubjectLabelService subjectLabelService;
+
+    /**
+     * @author: 32115
+     * @description: 查询题目详情
+     * @date: 2024/5/16
+     * @param: subjectInfoBO
+     * @return: SubjectInfoBO
+     */
+    @Override
+    public SubjectInfoBO getSubjectInfo(SubjectInfoBO subjectInfoBO) {
+        // 首先查询题目主表信息
+        SubjectInfo subjectInfo = subjectInfoService.getSubjectInfoById(subjectInfoBO.getId());
+        // 根据题目类型获取对应的处理器
+        SubjectTypeHandler handler = subjectTypeFactory.getHandler(subjectInfo.getSubjectType());
+        // 获取题目选项信息
+        SubjectFactoryBO subjectFactoryBO = handler.getBySubjectId(subjectInfo.getId());
+        // 封装BO
+        // 将factoryBo和Info转为Bo
+        SubjectInfoBO boResult = SubjectInfoBOConverter.CONVERTER
+                .convertInfoAndFactoryBoToBo(subjectFactoryBO, subjectInfo);
+        // 查询题目的标签信息
+        List<SubjectLabel> subjectLabelList = subjectLabelService
+                .getLabelBySubjectId(subjectInfo.getId());
+        // 封装labelNameList
+        boResult.setLabelNameList(subjectLabelList.stream()
+                .map(SubjectLabel::getLabelName).toList());
+        return boResult;
+    }
+
+    /**
+     * @author: 32115
+     * @description: 分页查询题目列表
+     * @date: 2024/5/16
+     * @param: subjectInfoBO
+     * @return: Page<SubjectInfoBO>
+     */
+    @Override
+    public Page<SubjectInfoBO> getSubjectPageList(SubjectInfoBO subjectInfoBO) {
+        // BO 转换成 info实体类
+        SubjectInfo subjectInfo = SubjectInfoBOConverter
+                .CONVERTER.converterBoToInfo(subjectInfoBO);
+        // 调用方法进行分页查询
+        Page<SubjectInfo> subjectInfoPage = subjectInfoService
+                .getSubjectPageList(subjectInfoBO.getPageNo(), subjectInfoBO.getPageSize(),
+                        subjectInfoBO.getCategoryId(), subjectInfoBO.getLabelId(), subjectInfo);
+        // SubjectInfoPage 转换成 SubjectInfoBOPage
+        return SubjectInfoBOConverter
+                .CONVERTER.converterInfoPageToBoPage(subjectInfoPage);
+    }
 
     /**
      * @author: 32115

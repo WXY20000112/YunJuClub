@@ -76,7 +76,7 @@ public class SubjectInfoBO implements Serializable {
     /**
      * 题目答案选项列表
      */
-    private List<SubjectOptionBO> optionBoList;
+    private List<SubjectOptionBO> optionList;
 
     /**
      * 题目所属分类id
@@ -92,5 +92,15 @@ public class SubjectInfoBO implements Serializable {
      * 题目所属标签名称列表
      */
     private List<String> labelNameList;
+
+    /**
+     * 第几页
+     */
+    private Integer pageNo;
+
+    /**
+     * 每页多少数据
+     */
+    private Integer pageSize;
 }
 

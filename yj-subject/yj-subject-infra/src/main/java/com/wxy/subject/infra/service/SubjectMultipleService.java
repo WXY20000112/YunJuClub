@@ -15,4 +15,7 @@ public interface SubjectMultipleService extends IService<SubjectMultiple> {
 
     // 添加多选题
     Boolean addMultipleSubject(List<SubjectMultiple> subjectMultipleList);
+
+    // 根据题目id查询多选题
+    List<SubjectMultiple> getBySubjectId(Long id);
 }

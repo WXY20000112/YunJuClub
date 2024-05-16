@@ -1,6 +1,7 @@
 package com.wxy.subject.domain.handler;
 
 import com.wxy.subject.common.enums.SubjectTypeEnum;
+import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 
 /**
@@ -16,4 +17,7 @@ public interface SubjectTypeHandler {
 
     // 添加题目功能
     Boolean addSubject(SubjectInfoBO subjectInfoBO);
+
+    // 根据题目id获取题目选项信息
+    SubjectFactoryBO getBySubjectId(Long id);
 }

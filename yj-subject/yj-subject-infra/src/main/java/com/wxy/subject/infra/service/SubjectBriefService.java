@@ -13,4 +13,7 @@ public interface SubjectBriefService extends IService<SubjectBrief> {
 
     // 添加简答题
     Boolean addBriefSubject(SubjectBrief subjectBrief);
+
+    // 根据题目id查询简答题
+    SubjectBrief getBySubjectId(Long id);
 }

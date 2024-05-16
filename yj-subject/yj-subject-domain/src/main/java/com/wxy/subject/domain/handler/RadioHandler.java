@@ -1,7 +1,9 @@
 package com.wxy.subject.domain.handler;
 
 import com.wxy.subject.common.enums.SubjectTypeEnum;
+import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
+import com.wxy.subject.domain.entity.SubjectOptionBO;
 import com.wxy.subject.infra.entity.SubjectRadio;
 import com.wxy.subject.infra.service.SubjectRadioService;
 import jakarta.annotation.Resource;
@@ -35,6 +37,31 @@ public class RadioHandler implements SubjectTypeHandler {
 
     /**
      * @author: 32115
+     * @description: 根据题目id获取单题目信息
+     * @date: 2024/5/16
+     * @param: id
+     * @return: SubjectFactoryBO
+     */
+    @Override
+    public SubjectFactoryBO getBySubjectId(Long id) {
+        // 根据subjectId查询信息
+        List<SubjectRadio> subjectRadioList =
+                subjectRadioService.getBySubjectId(id);
+        // 将multiple转为optionBo
+        List<SubjectOptionBO> optionBOList = subjectRadioList.stream().map(subjectRadio -> {
+            SubjectOptionBO subjectOptionBO = new SubjectOptionBO();
+            subjectOptionBO.setOptionType(subjectRadio.getOptionType());
+            subjectOptionBO.setOptionContent(subjectRadio.getOptionContent());
+            subjectOptionBO.setIsCorrect(subjectRadio.getIsCorrect());
+            return subjectOptionBO;
+        }).toList();
+        SubjectFactoryBO subjectFactoryBO = new SubjectFactoryBO();
+        subjectFactoryBO.setOptionList(optionBOList);
+        return subjectFactoryBO;
+    }
+
+    /**
+     * @author: 32115
      * @description: 添加单选题目
      * @date: 2024/5/15
      * @param: subjectInfoBO
@@ -43,9 +70,9 @@ public class RadioHandler implements SubjectTypeHandler {
     @Override
     public Boolean addSubject(SubjectInfoBO subjectInfoBO) {
         // 校验答案内容是否为空
-        if (CollectionUtils.isEmpty(subjectInfoBO.getOptionBoList())) return false;
+        if (CollectionUtils.isEmpty(subjectInfoBO.getOptionList())) return false;
         // 使用集合存储单选题选项信息 一个选项对应一个Radio对象
-        List<SubjectRadio> subjectRadioList = subjectInfoBO.getOptionBoList().stream()
+        List<SubjectRadio> subjectRadioList = subjectInfoBO.getOptionList().stream()
                 .map(optionBo -> {
                     SubjectRadio subjectRadio = new SubjectRadio();
                     // 设置所属题目id
