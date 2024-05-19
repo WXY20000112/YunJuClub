@@ -2,6 +2,7 @@ package com.wxy.auth.domain.service.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wxy.auth.common.aop.AopLogAnnotations;
 import com.wxy.auth.common.constant.AuthConstant;
 import com.wxy.auth.common.utils.RedisUtil;
 import com.wxy.auth.domain.converter.AuthPermissionBOConverter;
@@ -40,6 +41,7 @@ public class AuthPermissionDomainServiceImpl implements AuthPermissionDomainServ
      * @return: List<String>
      */
     @Override
+    @AopLogAnnotations
     public List<String> getPermissionList(String userName) {
         // 创建key
         String permissionKey = redisUtil.buildKey(AuthConstant.AUTH_PERMISSION_PREFIX, userName);
@@ -63,6 +65,7 @@ public class AuthPermissionDomainServiceImpl implements AuthPermissionDomainServ
      * @return: boolean
      */
     @Override
+    @AopLogAnnotations
     public Boolean changePermissionMenuShowStatus(AuthPermissionBO authPermissionBO) {
         // BO 转成 实体类
         AuthPermission authPermission = AuthPermissionBOConverter
@@ -79,6 +82,7 @@ public class AuthPermissionDomainServiceImpl implements AuthPermissionDomainServ
      * @return: Boolean
      */
     @Override
+    @AopLogAnnotations
     public Boolean changePermissionStatus(AuthPermissionBO authPermissionBO) {
         // BO 转成 实体类
         AuthPermission authPermission = AuthPermissionBOConverter
@@ -95,6 +99,7 @@ public class AuthPermissionDomainServiceImpl implements AuthPermissionDomainServ
      * @return: Boolean
      */
     @Override
+    @AopLogAnnotations
     public Boolean deleteAuthPermission(AuthPermissionBO authPermissionBO) {
         // BO 转成 实体类
         AuthPermission authPermission = AuthPermissionBOConverter
@@ -111,6 +116,7 @@ public class AuthPermissionDomainServiceImpl implements AuthPermissionDomainServ
      * @return: Boolean
      */
     @Override
+    @AopLogAnnotations
     public Boolean updateAuthPermission(AuthPermissionBO authPermissionBO) {
         // Bo 转换成 实体类
         AuthPermission authPermission = AuthPermissionBOConverter
@@ -128,6 +134,7 @@ public class AuthPermissionDomainServiceImpl implements AuthPermissionDomainServ
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean addPermission(AuthPermissionBO authPermissionBO) {
         // Bo 转换成 实体类
         AuthPermission authPermission = AuthPermissionBOConverter

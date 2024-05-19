@@ -80,6 +80,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- aop注解处理器依赖 -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.22.1</version>
+        </dependency>
+
     </dependencies>
 
     <!-- maven打包插件配置 -->

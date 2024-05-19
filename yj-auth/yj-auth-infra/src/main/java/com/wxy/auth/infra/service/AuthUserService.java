@@ -10,4 +10,10 @@ import com.wxy.auth.infra.entity.AuthUser;
  * @create: 2024-05-17 14:34
  */
 public interface AuthUserService extends IService<AuthUser> {
+
+    // 根据用户名查询用户是否存在
+    Boolean existsAuthUserByUserName(String userName);
+
+    // 添加用户
+    Boolean addAuthUser(AuthUser authUser);
 }

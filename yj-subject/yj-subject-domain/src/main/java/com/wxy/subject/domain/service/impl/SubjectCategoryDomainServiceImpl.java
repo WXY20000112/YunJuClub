@@ -1,5 +1,6 @@
 package com.wxy.subject.domain.service.impl;
 
+import com.wxy.subject.common.aop.AopLogAnnotations;
 import com.wxy.subject.domain.converter.SubjectCategoryBOConverter;
 import com.wxy.subject.domain.converter.SubjectLabelBOConverter;
 import com.wxy.subject.domain.entity.SubjectCategoryBO;
@@ -45,6 +46,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean add(SubjectCategoryBO subjectCategoryBO) {
         // BO转category实体类
         SubjectCategory subjectCategory = SubjectCategoryBOConverter
@@ -62,6 +64,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean deleteCategory(SubjectCategoryBO subjectCategoryBO) {
         // bo转实体类
         SubjectCategory subjectCategory = SubjectCategoryBOConverter
@@ -79,6 +82,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean updateCategory(SubjectCategoryBO subjectCategoryBO) {
         // bo转实体类
         SubjectCategory subjectCategory = SubjectCategoryBOConverter
@@ -96,6 +100,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public List<SubjectCategoryBO> getLabelByCategoryId(SubjectCategoryBO subjectCategoryBO) {
         // 根据一级分类id查询二级分类
         SubjectCategory subjectCategory = new SubjectCategory();
@@ -135,6 +140,7 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public List<SubjectCategoryBO> queryPrimaryCategory(SubjectCategoryBO subjectCategoryBO) {
         // bo转category
         SubjectCategory subjectCategory = SubjectCategoryBOConverter.CONVERTER

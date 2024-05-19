@@ -5,6 +5,7 @@ import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.application.converter.SubjectInfoDtoConverter;
 import com.wxy.subject.application.converter.SubjectOptionDtoConverter;
 import com.wxy.subject.application.dto.SubjectInfoDto;
+import com.wxy.subject.common.aop.AopLogAnnotations;
 import com.wxy.subject.common.entity.Result;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 import com.wxy.subject.domain.service.SubjectInfoDomainService;
@@ -35,6 +36,7 @@ public class SubjectController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/add")
+    @AopLogAnnotations
     public Result<Boolean> addSubjectInfo(@RequestBody SubjectInfoDto subjectInfoDto) {
         // 参数校验
         Preconditions.checkNotNull(subjectInfoDto.getSubjectName(), "题目名称不能为空");
@@ -64,6 +66,7 @@ public class SubjectController {
      * @return: Result<Page < SubjectInfoDto>>
      */
     @RequestMapping("/getSubjectPage")
+    @AopLogAnnotations
     public Result<Page<SubjectInfoDto>> getSubjectPageList(@RequestBody SubjectInfoDto subjectInfoDto) {
         // 参数校验
         Preconditions.checkNotNull(subjectInfoDto.getCategoryId(), "分类id不能为空");
@@ -88,6 +91,7 @@ public class SubjectController {
      * @return: Result<SubjectInfoDto>
      */
     @RequestMapping("/querySubjectInfo")
+    @AopLogAnnotations
     public Result<SubjectInfoDto> getSubjectInfo(@RequestBody SubjectInfoDto subjectInfoDto){
         // 参数校验
         Preconditions.checkNotNull(subjectInfoDto.getId(), "id不能为空");

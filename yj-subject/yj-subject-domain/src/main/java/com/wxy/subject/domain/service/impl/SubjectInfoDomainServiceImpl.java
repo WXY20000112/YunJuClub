@@ -1,6 +1,7 @@
 package com.wxy.subject.domain.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
+import com.wxy.subject.common.aop.AopLogAnnotations;
 import com.wxy.subject.domain.converter.SubjectInfoBOConverter;
 import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
@@ -50,6 +51,7 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public SubjectInfoBO getSubjectInfo(SubjectInfoBO subjectInfoBO) {
         // 首先查询题目主表信息
         SubjectInfo subjectInfo = subjectInfoService.getSubjectInfoById(subjectInfoBO.getId());
@@ -79,6 +81,7 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Page<SubjectInfoBO> getSubjectPageList(SubjectInfoBO subjectInfoBO) {
         // BO 转换成 info实体类
         SubjectInfo subjectInfo = SubjectInfoBOConverter
@@ -101,6 +104,7 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean addSubject(SubjectInfoBO subjectInfoBO) {
         // Bo 转换成 info实体类
         SubjectInfo subjectInfo = SubjectInfoBOConverter

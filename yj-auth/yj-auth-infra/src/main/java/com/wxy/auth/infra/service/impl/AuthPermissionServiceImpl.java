@@ -1,5 +1,6 @@
 package com.wxy.auth.infra.service.impl;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.wxy.auth.infra.entity.AuthPermission;
@@ -7,6 +8,12 @@ import com.wxy.auth.infra.mapper.AuthPermissionMapper;
 import com.wxy.auth.infra.service.AuthPermissionService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.wxy.auth.infra.entity.table.AuthPermissionTableDef.AUTH_PERMISSION;
+import static com.wxy.auth.infra.entity.table.AuthRolePermissionTableDef.AUTH_ROLE_PERMISSION;
+import static com.wxy.auth.infra.entity.table.AuthRoleTableDef.AUTH_ROLE;
 
 /**
  * @program: YunJuClub-Flex
@@ -21,6 +28,25 @@ public class AuthPermissionServiceImpl
 
     @Resource
     private AuthPermissionMapper authPermissionMapper;
+
+    /**
+     * @author: 32115
+     * @description: 根据角色id获取权限列表
+     * @date: 2024/5/19
+     * @param: id
+     * @return: List<AuthPermission>
+     */
+    @Override
+    public List<AuthPermission> getPermissionByRoleId(Long id) {
+        // 构造查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(AUTH_PERMISSION.DEFAULT_COLUMNS)
+                .from(AUTH_ROLE)
+                .leftJoin(AUTH_ROLE_PERMISSION).on(AUTH_ROLE.ID.eq(AUTH_ROLE_PERMISSION.ROLE_ID))
+                .leftJoin(AUTH_PERMISSION).on(AUTH_PERMISSION.ID.eq(AUTH_ROLE_PERMISSION.PERMISSION_ID))
+                .where(AUTH_ROLE.ID.eq(id));
+        return this.list(queryWrapper);
+    }
 
     /**
      * @author: 32115

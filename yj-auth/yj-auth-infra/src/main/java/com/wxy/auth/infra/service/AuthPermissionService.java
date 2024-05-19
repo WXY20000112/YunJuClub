@@ -3,6 +3,8 @@ package com.wxy.auth.infra.service;
 import com.mybatisflex.core.service.IService;
 import com.wxy.auth.infra.entity.AuthPermission;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthPermissionService
@@ -25,4 +27,7 @@ public interface AuthPermissionService extends IService<AuthPermission> {
 
     // 更新权限菜单显示状态
     boolean changePermissionMenuShowStatus(AuthPermission authPermission);
+
+    // 根据角色id获取权限
+    List<AuthPermission> getPermissionByRoleId(Long id);
 }

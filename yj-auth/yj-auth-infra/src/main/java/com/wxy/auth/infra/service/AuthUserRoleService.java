@@ -10,4 +10,7 @@ import com.wxy.auth.infra.entity.AuthUserRole;
  * @create: 2024-05-17 14:34
  */
 public interface AuthUserRoleService extends IService<AuthUserRole> {
+
+    // 添加用户角色关联关系
+    Boolean addAuthUserRole(AuthUserRole authUserRole);
 }

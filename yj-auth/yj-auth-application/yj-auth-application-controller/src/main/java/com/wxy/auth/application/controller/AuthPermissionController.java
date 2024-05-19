@@ -3,6 +3,7 @@ package com.wxy.auth.application.controller;
 import com.google.common.base.Preconditions;
 import com.wxy.auth.application.converter.AuthPermissionDtoConverter;
 import com.wxy.auth.application.dto.AuthPermissionDto;
+import com.wxy.auth.common.aop.AopLogAnnotations;
 import com.wxy.auth.common.entity.Result;
 import com.wxy.auth.domain.entity.AuthPermissionBO;
 import com.wxy.auth.domain.service.AuthPermissionDomainService;
@@ -35,6 +36,7 @@ public class AuthPermissionController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/add")
+    @AopLogAnnotations
     public Result<Boolean> addPermission(@RequestBody AuthPermissionDto authPermissionDto){
         // 参数校验
         Preconditions.checkNotNull(authPermissionDto.getName(), "权限名称不能为空");
@@ -58,6 +60,7 @@ public class AuthPermissionController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/update")
+    @AopLogAnnotations
     public Result<Boolean> updateAuthPermission(@RequestBody AuthPermissionDto authPermissionDto){
         // 参数校验
         Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
@@ -77,6 +80,7 @@ public class AuthPermissionController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/delete")
+    @AopLogAnnotations
     public Result<Boolean> deletePermission(@RequestBody AuthPermissionDto authPermissionDto){
         // 参数校验
         Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
@@ -96,6 +100,7 @@ public class AuthPermissionController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/changePermissionStatus")
+    @AopLogAnnotations
     public Result<Boolean> changePermissionStatus(@RequestBody AuthPermissionDto authPermissionDto){
         // 参数校验
         Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
@@ -115,6 +120,7 @@ public class AuthPermissionController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/changePermissionMenuShow")
+    @AopLogAnnotations
     public Result<Boolean> changeMenuShowStatus(@RequestBody AuthPermissionDto authPermissionDto){
         // 参数校验
         Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
@@ -134,6 +140,7 @@ public class AuthPermissionController {
      * @return: Result<List < String>>
      */
     @RequestMapping("/getPermission")
+    @AopLogAnnotations
     public Result<List<String>> getPermissionList(@RequestParam(name = "userName") String userName){
         // 参数校验
         Preconditions.checkNotNull(userName, "用户名不能为空");

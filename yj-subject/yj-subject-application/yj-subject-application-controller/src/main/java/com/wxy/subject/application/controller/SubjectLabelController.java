@@ -3,6 +3,7 @@ package com.wxy.subject.application.controller;
 import com.google.common.base.Preconditions;
 import com.wxy.subject.application.converter.SubjectLabelDtoConverter;
 import com.wxy.subject.application.dto.SubjectLabelDto;
+import com.wxy.subject.common.aop.AopLogAnnotations;
 import com.wxy.subject.common.entity.Result;
 import com.wxy.subject.domain.entity.SubjectLabelBO;
 import com.wxy.subject.domain.service.SubjectLabelDomainService;
@@ -36,6 +37,7 @@ public class SubjectLabelController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/add")
+    @AopLogAnnotations
     public Result<Boolean> addLabel(@RequestBody SubjectLabelDto subjectLabelDto) {
         log.info("SubjectLabelController.addLabel.SubjectLabelDto:{}", subjectLabelDto);
         // 参数校验
@@ -56,6 +58,7 @@ public class SubjectLabelController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/delete")
+    @AopLogAnnotations
     public Result<Boolean> deleteLabel(@RequestBody SubjectLabelDto subjectLabelDto) {
         // 参数校验
         Preconditions.checkNotNull(subjectLabelDto.getId(), "标签id不能为空");
@@ -75,6 +78,7 @@ public class SubjectLabelController {
      * @return: Result<Boolean>
      */
     @RequestMapping("/update")
+    @AopLogAnnotations
     public Result<Boolean> updateLabel(@RequestBody SubjectLabelDto subjectLabelDto) {
         // 参数校验
         Preconditions.checkNotNull(subjectLabelDto.getId(), "标签id不能为空");
@@ -94,6 +98,7 @@ public class SubjectLabelController {
      * @return: Result<List < SubjectLabelDto>>
      */
     @RequestMapping("/queryLabelByCategoryId")
+    @AopLogAnnotations
     public Result<List<SubjectLabelDto>> getLabelByCategoryId(@RequestBody SubjectLabelDto subjectLabelDto) {
         log.info("SubjectLabelController.getLabelByCategoryId.SubjectLabelDto:{}", subjectLabelDto);
         // 参数校验

@@ -16,4 +16,16 @@ import org.springframework.stereotype.Service;
 public class AuthUserRoleServiceImpl
         extends ServiceImpl<AuthUserRoleMapper, AuthUserRole>
         implements AuthUserRoleService {
+
+    /**
+     * @author: 32115
+     * @description: 添加用户角色关联关系
+     * @date: 2024/5/19
+     * @param: authUserRole
+     * @return: Boolean
+     */
+    @Override
+    public Boolean addAuthUserRole(AuthUserRole authUserRole) {
+        return this.save(authUserRole);
+    }
 }

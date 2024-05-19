@@ -1,5 +1,6 @@
 package com.wxy.subject.domain.service.impl;
 
+import com.wxy.subject.common.aop.AopLogAnnotations;
 import com.wxy.subject.common.enums.CategoryTypeEnum;
 import com.wxy.subject.domain.converter.SubjectLabelBOConverter;
 import com.wxy.subject.domain.entity.SubjectLabelBO;
@@ -40,6 +41,7 @@ public class SubjectLabelDomainServiceImpl implements SubjectLabelDomainService 
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public List<SubjectLabelBO> getLabelByCategoryId(SubjectLabelBO subjectLabelBO) {
         // 首先根据categoryId查询分类信息
         // 如果要查询的分类是一级分类 直接查询label表返回一级分类下的所有label即可
@@ -72,6 +74,7 @@ public class SubjectLabelDomainServiceImpl implements SubjectLabelDomainService 
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean updateLabel(SubjectLabelBO subjectLabelBO) {
         // Bo 转换为实体
         SubjectLabel subjectLabel = SubjectLabelBOConverter
@@ -89,6 +92,7 @@ public class SubjectLabelDomainServiceImpl implements SubjectLabelDomainService 
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean deleteLabel(SubjectLabelBO subjectLabelBO) {
         // Bo 转换为实体
         SubjectLabel subjectLabel = SubjectLabelBOConverter
@@ -106,6 +110,7 @@ public class SubjectLabelDomainServiceImpl implements SubjectLabelDomainService 
      */
     @Override
     @Transactional
+    @AopLogAnnotations
     public Boolean addLabel(SubjectLabelBO subjectLabelBO) {
         // BO转换为实体
         SubjectLabel subjectLabel = SubjectLabelBOConverter
