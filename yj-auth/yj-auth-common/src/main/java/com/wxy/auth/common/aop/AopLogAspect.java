@@ -36,7 +36,7 @@ public class AopLogAspect {
      */
     @Before("aopLogCut()")
     public void before(JoinPoint joinPoint){
-        logger.info("前置通知，在方法执行前执行");
+        logger.info("前置通知");
         logger.info("{}.{}.{}",
                 joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName(),

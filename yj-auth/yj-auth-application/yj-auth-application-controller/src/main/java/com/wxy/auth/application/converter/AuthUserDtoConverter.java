@@ -18,4 +18,7 @@ public interface AuthUserDtoConverter {
 
     // AuthUserDto转AuthUserBO
     AuthUserBO converterDtoToBo(AuthUserDto authUserDto);
+
+    // AuthUserBO转AuthUserDto
+    AuthUserDto converterBoToDto(AuthUserBO authUserBO);
 }

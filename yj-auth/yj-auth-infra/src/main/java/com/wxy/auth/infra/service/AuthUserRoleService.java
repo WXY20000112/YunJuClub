@@ -3,6 +3,8 @@ package com.wxy.auth.infra.service;
 import com.mybatisflex.core.service.IService;
 import com.wxy.auth.infra.entity.AuthUserRole;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthUserRoleService
@@ -13,4 +15,7 @@ public interface AuthUserRoleService extends IService<AuthUserRole> {
 
     // 添加用户角色关联关系
     Boolean addAuthUserRole(AuthUserRole authUserRole);
+
+    // 批量添加用户角色关联关系
+    Boolean addAuthUserRoleBatch(List<AuthUserRole> authUserRoleList);
 }

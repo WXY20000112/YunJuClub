@@ -8,6 +8,7 @@ import com.wxy.auth.common.entity.Result;
 import com.wxy.auth.domain.entity.AuthPermissionBO;
 import com.wxy.auth.domain.service.AuthPermissionDomainService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/permission")
+@Slf4j
 public class AuthPermissionController {
 
     @Resource
@@ -38,18 +40,23 @@ public class AuthPermissionController {
     @RequestMapping("/add")
     @AopLogAnnotations
     public Result<Boolean> addPermission(@RequestBody AuthPermissionDto authPermissionDto){
-        // 参数校验
-        Preconditions.checkNotNull(authPermissionDto.getName(), "权限名称不能为空");
-        Preconditions.checkNotNull(authPermissionDto.getType(), "权限类型不能为空");
-        Preconditions.checkNotNull(authPermissionDto.getPermissionKey(), "权限标识不能为空");
-        Preconditions.checkNotNull(authPermissionDto.getMenuUrl(), "权限菜单路由不能为空");
-        Preconditions.checkNotNull(authPermissionDto.getParentId(), "父权限id不能为空");
-        // Dto转BO
-        AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
-                .CONVERTER.converterDtoToBO(authPermissionDto);
-        // 添加权限信息
-        return authPermissionDomainService.addPermission(authPermissionBO) ?
-                Result.success() : Result.error("添加成功");
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authPermissionDto.getName(), "权限名称不能为空");
+            Preconditions.checkNotNull(authPermissionDto.getType(), "权限类型不能为空");
+            Preconditions.checkNotNull(authPermissionDto.getPermissionKey(), "权限标识不能为空");
+            Preconditions.checkNotNull(authPermissionDto.getMenuUrl(), "权限菜单路由不能为空");
+            Preconditions.checkNotNull(authPermissionDto.getParentId(), "父权限id不能为空");
+            // Dto转BO
+            AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
+                    .CONVERTER.converterDtoToBO(authPermissionDto);
+            // 添加权限信息
+            return authPermissionDomainService.addPermission(authPermissionBO) ?
+                    Result.success("添加成功") : Result.error("添加失败");
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -62,14 +69,19 @@ public class AuthPermissionController {
     @RequestMapping("/update")
     @AopLogAnnotations
     public Result<Boolean> updateAuthPermission(@RequestBody AuthPermissionDto authPermissionDto){
-        // 参数校验
-        Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
-        // Dto转BO
-        AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
-                .CONVERTER.converterDtoToBO(authPermissionDto);
-        // 更新权限信息
-        return authPermissionDomainService.updateAuthPermission(authPermissionBO) ?
-                Result.success() : Result.error("修改失败");
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
+            // Dto转BO
+            AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
+                    .CONVERTER.converterDtoToBO(authPermissionDto);
+            // 更新权限信息
+            return authPermissionDomainService.updateAuthPermission(authPermissionBO) ?
+                    Result.success() : Result.error("修改失败");
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -82,14 +94,19 @@ public class AuthPermissionController {
     @RequestMapping("/delete")
     @AopLogAnnotations
     public Result<Boolean> deletePermission(@RequestBody AuthPermissionDto authPermissionDto){
-        // 参数校验
-        Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
-        // Dto转BO
-        AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
-                .CONVERTER.converterDtoToBO(authPermissionDto);
-        // 删除权限信息
-        return authPermissionDomainService.deleteAuthPermission(authPermissionBO) ?
-                Result.success(true) : Result.error("删除失败");
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
+            // Dto转BO
+            AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
+                    .CONVERTER.converterDtoToBO(authPermissionDto);
+            // 删除权限信息
+            return authPermissionDomainService.deleteAuthPermission(authPermissionBO) ?
+                    Result.success(true) : Result.error("删除失败");
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -102,14 +119,19 @@ public class AuthPermissionController {
     @RequestMapping("/changePermissionStatus")
     @AopLogAnnotations
     public Result<Boolean> changePermissionStatus(@RequestBody AuthPermissionDto authPermissionDto){
-        // 参数校验
-        Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
-        // Dto转BO
-        AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
-                .CONVERTER.converterDtoToBO(authPermissionDto);
-        // 更新权限状态
-        return authPermissionDomainService.changePermissionStatus(authPermissionBO) ?
-                Result.success(true) : Result.error("修改失败");
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
+            // Dto转BO
+            AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
+                    .CONVERTER.converterDtoToBO(authPermissionDto);
+            // 更新权限状态
+            return authPermissionDomainService.changePermissionStatus(authPermissionBO) ?
+                    Result.success(true) : Result.error("修改失败");
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -122,14 +144,19 @@ public class AuthPermissionController {
     @RequestMapping("/changePermissionMenuShow")
     @AopLogAnnotations
     public Result<Boolean> changeMenuShowStatus(@RequestBody AuthPermissionDto authPermissionDto){
-        // 参数校验
-        Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
-        // Dto转BO
-        AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
-                .CONVERTER.converterDtoToBO(authPermissionDto);
-        // 更新权限状态
-        return authPermissionDomainService.changePermissionMenuShowStatus(authPermissionBO) ?
-                Result.success(true) : Result.error("修改失败");
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authPermissionDto.getId(), "权限id不能为空");
+            // Dto转BO
+            AuthPermissionBO authPermissionBO = AuthPermissionDtoConverter
+                    .CONVERTER.converterDtoToBO(authPermissionDto);
+            // 更新权限状态
+            return authPermissionDomainService.changePermissionMenuShowStatus(authPermissionBO) ?
+                    Result.success(true) : Result.error("修改失败");
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -142,9 +169,14 @@ public class AuthPermissionController {
     @RequestMapping("/getPermission")
     @AopLogAnnotations
     public Result<List<String>> getPermissionList(@RequestParam(name = "userName") String userName){
-        // 参数校验
-        Preconditions.checkNotNull(userName, "用户名不能为空");
-        // 获取权限列表
-        return Result.success(authPermissionDomainService.getPermissionList(userName));
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(userName, "用户名不能为空");
+            // 获取权限列表
+            return Result.success(authPermissionDomainService.getPermissionList(userName));
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 }

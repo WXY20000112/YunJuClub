@@ -37,15 +37,20 @@ public class AuthRoleController {
     @RequestMapping("/add")
     @AopLogAnnotations
     public Result<Boolean> addRole(@RequestBody AuthRoleDto authRoleDto) {
-        // 参数校验
-        Preconditions.checkNotNull(authRoleDto.getRoleName(), "角色名称不能为空");
-        Preconditions.checkNotNull(authRoleDto.getRoleKey(), "角色标识不能为空");
-        // Dto转换
-        AuthRoleBO authRoleBO = AuthRoleDtoConverter
-                .CONVERTER.converterDtoToBo(authRoleDto);
-        // 调用领域服务
-        return authRoleDomainService.addRole(authRoleBO) ?
-                Result.success() : Result.error();
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authRoleDto.getRoleName(), "角色名称不能为空");
+            Preconditions.checkNotNull(authRoleDto.getRoleKey(), "角色标识不能为空");
+            // Dto转换
+            AuthRoleBO authRoleBO = AuthRoleDtoConverter
+                    .CONVERTER.converterDtoToBo(authRoleDto);
+            // 调用领域服务
+            return authRoleDomainService.addRole(authRoleBO) ?
+                    Result.success(true) : Result.error();
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -58,14 +63,19 @@ public class AuthRoleController {
     @RequestMapping("/update")
     @AopLogAnnotations
     public Result<Boolean> updateAuthRole(@RequestBody AuthRoleDto authRoleDto){
-        // 参数校验
-        Preconditions.checkNotNull(authRoleDto.getId(), "角色id不能为空");
-        // Dto转换
-        AuthRoleBO authRoleBO = AuthRoleDtoConverter
-                .CONVERTER.converterDtoToBo(authRoleDto);
-        // 调用领域服务
-        return authRoleDomainService.updateAuthRole(authRoleBO) ?
-                Result.success() : Result.error();
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authRoleDto.getId(), "角色id不能为空");
+            // Dto转换
+            AuthRoleBO authRoleBO = AuthRoleDtoConverter
+                    .CONVERTER.converterDtoToBo(authRoleDto);
+            // 调用领域服务
+            return authRoleDomainService.updateAuthRole(authRoleBO) ?
+                    Result.success() : Result.error();
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -78,14 +88,19 @@ public class AuthRoleController {
     @RequestMapping("/delete")
     @AopLogAnnotations
     public Result<Boolean> deleteAuthRole(@RequestBody AuthRoleDto authRoleDto) {
-        // 参数校验
-        Preconditions.checkNotNull(authRoleDto.getId(), "角色id不能为空");
-        // Dto转换
-        AuthRoleBO authRoleBO = AuthRoleDtoConverter
-                .CONVERTER.converterDtoToBo(authRoleDto);
-        // 调用领域服务
-        return authRoleDomainService.deleteAuthRole(authRoleBO) ?
-                Result.success() : Result.error();
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authRoleDto.getId(), "角色id不能为空");
+            // Dto转换
+            AuthRoleBO authRoleBO = AuthRoleDtoConverter
+                    .CONVERTER.converterDtoToBo(authRoleDto);
+            // 调用领域服务
+            return authRoleDomainService.deleteAuthRole(authRoleBO) ?
+                    Result.success() : Result.error();
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -98,13 +113,18 @@ public class AuthRoleController {
     @RequestMapping("/changeRoleStatus")
     @AopLogAnnotations
     public Result<Boolean> changeRoleStatus(@RequestBody AuthRoleDto authRoleDto) {
-        // 参数校验
-        Preconditions.checkNotNull(authRoleDto.getId(), "角色id不能为空");
-        // Dto转换
-        AuthRoleBO authRoleBO = AuthRoleDtoConverter
-                .CONVERTER.converterDtoToBo(authRoleDto);
-        // 调用领域服务
-        return authRoleDomainService.changeRoleStatus(authRoleBO) ?
-                Result.success() : Result.error();
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(authRoleDto.getId(), "角色id不能为空");
+            // Dto转换
+            AuthRoleBO authRoleBO = AuthRoleDtoConverter
+                    .CONVERTER.converterDtoToBo(authRoleDto);
+            // 调用领域服务
+            return authRoleDomainService.changeRoleStatus(authRoleBO) ?
+                    Result.success() : Result.error();
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
    }
 }

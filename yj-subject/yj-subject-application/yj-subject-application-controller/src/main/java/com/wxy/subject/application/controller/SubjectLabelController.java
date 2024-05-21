@@ -39,15 +39,19 @@ public class SubjectLabelController {
     @RequestMapping("/add")
     @AopLogAnnotations
     public Result<Boolean> addLabel(@RequestBody SubjectLabelDto subjectLabelDto) {
-        log.info("SubjectLabelController.addLabel.SubjectLabelDto:{}", subjectLabelDto);
-        // 参数校验
-        Preconditions.checkNotNull(subjectLabelDto.getLabelName(), "标签名称不能为空");
-        // Dto 转 BO
-        SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
-                .CONVERTER.converterDtoToBo(subjectLabelDto);
-        // 调用业务层
-        return subjectLabelDomainService
-                .addLabel(subjectLabelBO) ? Result.success() : Result.error();
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(subjectLabelDto.getLabelName(), "标签名称不能为空");
+            // Dto 转 BO
+            SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
+                    .CONVERTER.converterDtoToBo(subjectLabelDto);
+            // 调用业务层
+            return subjectLabelDomainService
+                    .addLabel(subjectLabelBO) ? Result.success() : Result.error();
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -60,14 +64,19 @@ public class SubjectLabelController {
     @RequestMapping("/delete")
     @AopLogAnnotations
     public Result<Boolean> deleteLabel(@RequestBody SubjectLabelDto subjectLabelDto) {
-        // 参数校验
-        Preconditions.checkNotNull(subjectLabelDto.getId(), "标签id不能为空");
-        // Dto 转 BO
-        SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
-                .CONVERTER.converterDtoToBo(subjectLabelDto);
-        // 调用业务层
-        return subjectLabelDomainService
-                .deleteLabel(subjectLabelBO) ? Result.success() : Result.error();
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(subjectLabelDto.getId(), "标签id不能为空");
+            // Dto 转 BO
+            SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
+                    .CONVERTER.converterDtoToBo(subjectLabelDto);
+            // 调用业务层
+            return subjectLabelDomainService
+                    .deleteLabel(subjectLabelBO) ? Result.success() : Result.error();
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -80,14 +89,19 @@ public class SubjectLabelController {
     @RequestMapping("/update")
     @AopLogAnnotations
     public Result<Boolean> updateLabel(@RequestBody SubjectLabelDto subjectLabelDto) {
-        // 参数校验
-        Preconditions.checkNotNull(subjectLabelDto.getId(), "标签id不能为空");
-        // Dto 转 BO
-        SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
-                .CONVERTER.converterDtoToBo(subjectLabelDto);
-        // 调用业务层
-        return subjectLabelDomainService
-                .updateLabel(subjectLabelBO) ? Result.success() : Result.error();
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(subjectLabelDto.getId(), "标签id不能为空");
+            // Dto 转 BO
+            SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
+                    .CONVERTER.converterDtoToBo(subjectLabelDto);
+            // 调用业务层
+            return subjectLabelDomainService
+                    .updateLabel(subjectLabelBO) ? Result.success() : Result.error();
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 
     /**
@@ -100,19 +114,23 @@ public class SubjectLabelController {
     @RequestMapping("/queryLabelByCategoryId")
     @AopLogAnnotations
     public Result<List<SubjectLabelDto>> getLabelByCategoryId(@RequestBody SubjectLabelDto subjectLabelDto) {
-        log.info("SubjectLabelController.getLabelByCategoryId.SubjectLabelDto:{}", subjectLabelDto);
-        // 参数校验
-        Preconditions.checkNotNull(subjectLabelDto.getCategoryId(), "分类id不能为空");
-        // Dto 转 BO
-        SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
-                .CONVERTER.converterDtoToBo(subjectLabelDto);
-        // 调用业务层
-        List<SubjectLabelBO> subjectLabelBOList = subjectLabelDomainService
-                .getLabelByCategoryId(subjectLabelBO);
-        // BO 转 Dto
-        List<SubjectLabelDto> subjectLabelDtoList = SubjectLabelDtoConverter
-                .CONVERTER.converterBoToDto(subjectLabelBOList);
-        // 返回结果
-        return Result.success(subjectLabelDtoList);
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(subjectLabelDto.getCategoryId(), "分类id不能为空");
+            // Dto 转 BO
+            SubjectLabelBO subjectLabelBO = SubjectLabelDtoConverter
+                    .CONVERTER.converterDtoToBo(subjectLabelDto);
+            // 调用业务层
+            List<SubjectLabelBO> subjectLabelBOList = subjectLabelDomainService
+                    .getLabelByCategoryId(subjectLabelBO);
+            // BO 转 Dto
+            List<SubjectLabelDto> subjectLabelDtoList = SubjectLabelDtoConverter
+                    .CONVERTER.converterBoToDto(subjectLabelBOList);
+            // 返回结果
+            return Result.success(subjectLabelDtoList);
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
     }
 }

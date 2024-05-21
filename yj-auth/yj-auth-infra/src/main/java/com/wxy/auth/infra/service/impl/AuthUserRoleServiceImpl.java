@@ -6,6 +6,8 @@ import com.wxy.auth.infra.mapper.AuthUserRoleMapper;
 import com.wxy.auth.infra.service.AuthUserRoleService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthUserRoleService实现类
@@ -16,6 +18,18 @@ import org.springframework.stereotype.Service;
 public class AuthUserRoleServiceImpl
         extends ServiceImpl<AuthUserRoleMapper, AuthUserRole>
         implements AuthUserRoleService {
+
+    /**
+     * @author: 32115
+     * @description: 批量添加用户角色关联关系
+     * @date: 2024/5/21
+     * @param: authUserRoleList
+     * @return: Boolean
+     */
+    @Override
+    public Boolean addAuthUserRoleBatch(List<AuthUserRole> authUserRoleList) {
+        return this.saveBatch(authUserRoleList);
+    }
 
     /**
      * @author: 32115

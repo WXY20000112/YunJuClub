@@ -18,4 +18,7 @@ public interface AuthUserBOConverter {
 
     // Bo -> 实体类
     AuthUser converterBOToEntity(AuthUserBO authUserBO);
+
+    // 实体类 -> Bo
+    AuthUserBO converterEntityToBo(AuthUser authUser);
 }

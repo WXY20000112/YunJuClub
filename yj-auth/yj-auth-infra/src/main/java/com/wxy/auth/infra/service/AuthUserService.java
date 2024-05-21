@@ -16,4 +16,16 @@ public interface AuthUserService extends IService<AuthUser> {
 
     // 添加用户
     Boolean addAuthUser(AuthUser authUser);
+
+    // 更新用户
+    Boolean updateAuthUser(AuthUser authUser);
+
+    // 删除用户
+    Boolean deleteAuthUser(AuthUser authUser);
+
+    // 更改用户状态
+    Boolean changeAuthUserStatus(AuthUser authUser);
+
+    // 根据用户名查询用户信息
+    AuthUser getUserInfoByUserName(AuthUser authUser);
 }

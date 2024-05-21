@@ -1,6 +1,6 @@
-package com.wxy.auth.common.entity;
+package com.wxy.gateway.entity;
 
-import com.wxy.auth.common.enums.ResultCodeEnum;
+import com.wxy.gateway.enums.ResultCodeEnum;
 import lombok.Data;
 
 /**
@@ -108,6 +108,23 @@ public class Result<T> {
         result.setSuccess(false);
         result.setCode(ResultCodeEnum.FAIL.getCode());
         result.setMessage(ResultCodeEnum.FAIL.getMessage());
+        result.setData(data);
+        return result;
+    }
+
+    /**
+     * @author: 32115
+     * @description: 请求失败 返回结果带有数据和提示信息
+     * @date: 2024/5/21
+     * @param: data
+     * @param: msg
+     * @return: Result<T>
+     */
+    public static <T> Result<T> error(T data, String msg) {
+        Result<T> result = new Result<>();
+        result.setSuccess(false);
+        result.setCode(ResultCodeEnum.FAIL.getCode());
+        result.setMessage(msg);
         result.setData(data);
         return result;
     }
