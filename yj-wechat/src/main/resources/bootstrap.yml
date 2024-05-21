@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: yj-wechat
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: 192.168.200.129:8848
+        username: nacos
+        password: 156832zxc@
+        prefix: ${spring.application.name}
+      discovery:
+        server-addr: 192.168.200.129:8848
+        username: nacos
+        password: 156832zxc@
+

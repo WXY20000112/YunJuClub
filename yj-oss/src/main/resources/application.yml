@@ -1,0 +1,16 @@
+server:
+  port: 8083
+spring:
+  main:
+    banner-mode: off
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB  # 设置单文件最大上传文件大小为5MB
+      max-request-size: 100MB  # 设置请求体即多文件最大上传文件大小为100MB
+logging:
+  config: classpath:log4j2-spring.xml
+minio:
+  minioUrl: http://192.168.200.129:9000
+  minioUser: minio
+  minioPassword: 156832zxc@
