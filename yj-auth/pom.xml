@@ -14,6 +14,7 @@
         <module>yj-auth-application</module>
         <module>yj-auth-common</module>
         <module>yj-auth-domain</module>
+        <module>yj-auth-api</module>
     </modules>
 
     <properties>

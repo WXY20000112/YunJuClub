@@ -2,10 +2,12 @@ package com.wxy.auth.common.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wxy.auth.common.interceptor.LoginInterceptor;
 import jakarta.annotation.Nonnull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import java.util.List;
@@ -25,6 +27,12 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
         super.configureMessageConverters(converters);
         // 添加一个新的规则
         converters.add(mappingJackson2HttpMessageConverter());
+    }
+
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(new LoginInterceptor())
+                .addPathPatterns("/**");
     }
 
     private MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){

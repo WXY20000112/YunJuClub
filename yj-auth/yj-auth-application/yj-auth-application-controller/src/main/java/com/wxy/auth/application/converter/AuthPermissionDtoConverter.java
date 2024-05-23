@@ -5,8 +5,6 @@ import com.wxy.auth.domain.entity.AuthPermissionBO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
 /**
  * @program: YunJuClub-Flex
  * @description: AuthPermissionDTO转换器
@@ -22,5 +20,5 @@ public interface AuthPermissionDtoConverter {
     AuthPermissionBO converterDtoToBO(AuthPermissionDto authPermissionDto);
 
     // AuthPermissionBO 转换 AuthPermissionDTO
-    List<AuthPermissionDto> converterBOToDto(List<AuthPermissionBO> authPermissionBOList);
+    // List<AuthPermissionDto> converterBOToDto(List<AuthPermissionBO> authPermissionBOList);
 }

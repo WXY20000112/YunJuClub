@@ -1,6 +1,6 @@
 package com.wxy.auth.application.converter;
 
-import com.wxy.auth.application.dto.AuthUserDto;
+import com.wxy.auth.api.entity.AuthUserDto;
 import com.wxy.auth.domain.entity.AuthUserBO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

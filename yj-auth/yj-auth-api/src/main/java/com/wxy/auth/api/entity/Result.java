@@ -1,6 +1,6 @@
-package com.wxy.auth.common.entity;
+package com.wxy.auth.api.entity;
 
-import com.wxy.auth.common.enums.ResultCodeEnum;
+import com.wxy.auth.api.enums.ResultCodeEnum;
 import lombok.Data;
 
 /**

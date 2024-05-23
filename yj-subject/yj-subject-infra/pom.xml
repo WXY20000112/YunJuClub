@@ -45,6 +45,12 @@
             <artifactId>yj-subject-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.wxy</groupId>
+            <artifactId>yj-auth-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

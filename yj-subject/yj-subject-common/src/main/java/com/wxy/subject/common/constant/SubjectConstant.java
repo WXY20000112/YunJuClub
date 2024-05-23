@@ -9,4 +9,6 @@ package com.wxy.subject.common.constant;
 public class SubjectConstant {
 
     public static final String SUBJECT_ANSWER_INIT = "暂无答案";
+
+    public static final String LOGIN_ID = "loginId";
 }

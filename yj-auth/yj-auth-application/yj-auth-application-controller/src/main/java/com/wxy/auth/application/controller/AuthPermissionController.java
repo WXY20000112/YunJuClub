@@ -1,10 +1,10 @@
 package com.wxy.auth.application.controller;
 
 import com.google.common.base.Preconditions;
+import com.wxy.auth.api.entity.Result;
 import com.wxy.auth.application.converter.AuthPermissionDtoConverter;
 import com.wxy.auth.application.dto.AuthPermissionDto;
 import com.wxy.auth.common.aop.AopLogAnnotations;
-import com.wxy.auth.common.entity.Result;
 import com.wxy.auth.domain.entity.AuthPermissionBO;
 import com.wxy.auth.domain.service.AuthPermissionDomainService;
 import jakarta.annotation.Resource;

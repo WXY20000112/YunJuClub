@@ -16,4 +16,6 @@ public class GatewayConstant {
 
     // 初始普通角色
     public static final String NORMAL_USER = "normal_user";
+
+    public static final String LOGIN_ID = "loginId";
 }

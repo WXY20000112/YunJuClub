@@ -46,4 +46,6 @@ public class AuthConstant {
 
     // 初始头像
     public static final String INITIAL_AVATAR = "initial_avatar.png";
+
+    public static final String LOGIN_ID = "loginId";
 }

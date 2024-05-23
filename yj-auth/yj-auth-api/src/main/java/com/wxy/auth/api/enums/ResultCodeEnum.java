@@ -1,4 +1,4 @@
-package com.wxy.auth.common.enums;
+package com.wxy.auth.api.enums;
 
 import lombok.Getter;
 

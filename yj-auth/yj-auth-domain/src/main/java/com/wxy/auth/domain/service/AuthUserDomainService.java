@@ -1,7 +1,7 @@
 package com.wxy.auth.domain.service;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
-import com.wxy.auth.common.entity.Result;
+import com.wxy.auth.api.entity.Result;
 import com.wxy.auth.domain.entity.AuthUserBO;
 
 /**

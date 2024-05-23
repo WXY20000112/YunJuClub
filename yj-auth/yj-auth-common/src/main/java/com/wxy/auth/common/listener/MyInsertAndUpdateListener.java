@@ -2,6 +2,7 @@ package com.wxy.auth.common.listener;
 
 import com.mybatisflex.annotation.InsertListener;
 import com.mybatisflex.annotation.UpdateListener;
+import com.wxy.auth.common.utils.ThreadLocalUtil;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Method;
@@ -51,8 +52,8 @@ public class MyInsertAndUpdateListener implements InsertListener, UpdateListener
         // 3、调用invoke方法执行获取到的类方法，设置字段值
         setCreatedTime.invoke(object, new Date());
         setUpdateTime.invoke(object, new Date());
-        setCreatedBy.invoke(object, "wxy");
-        setUpdateBy.invoke(object, "wxy");
+        setCreatedBy.invoke(object, ThreadLocalUtil.getLoginId());
+        setUpdateBy.invoke(object, ThreadLocalUtil.getLoginId());
     }
 
     /**
@@ -75,6 +76,6 @@ public class MyInsertAndUpdateListener implements InsertListener, UpdateListener
 
         // 3、调用invoke方法执行获取到的类方法，设置字段值
         setUpdateTime.invoke(object, new Date());
-        setUpdateBy.invoke(object, "wxy");
+        setUpdateBy.invoke(object, ThreadLocalUtil.getLoginId());
     }
 }

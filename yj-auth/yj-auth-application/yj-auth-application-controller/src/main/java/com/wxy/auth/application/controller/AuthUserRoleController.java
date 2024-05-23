@@ -1,10 +1,10 @@
 package com.wxy.auth.application.controller;
 
 import com.google.common.base.Preconditions;
+import com.wxy.auth.api.entity.Result;
 import com.wxy.auth.application.converter.AuthUserRoleDtoConverter;
 import com.wxy.auth.application.dto.AuthUserRoleDto;
 import com.wxy.auth.common.aop.AopLogAnnotations;
-import com.wxy.auth.common.entity.Result;
 import com.wxy.auth.domain.entity.AuthUserRoleBO;
 import com.wxy.auth.domain.service.AuthUserRoleDomainService;
 import jakarta.annotation.Resource;
