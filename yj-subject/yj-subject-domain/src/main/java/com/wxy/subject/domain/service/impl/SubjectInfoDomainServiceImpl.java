@@ -2,6 +2,8 @@ package com.wxy.subject.domain.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.common.aop.AopLogAnnotations;
+import com.wxy.subject.common.utils.IdWorkerUtil;
+import com.wxy.subject.common.utils.ThreadLocalUtil;
 import com.wxy.subject.domain.converter.SubjectInfoBOConverter;
 import com.wxy.subject.domain.entity.SubjectFactoryBO;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
@@ -11,6 +13,8 @@ import com.wxy.subject.domain.service.SubjectInfoDomainService;
 import com.wxy.subject.infra.entity.SubjectInfo;
 import com.wxy.subject.infra.entity.SubjectLabel;
 import com.wxy.subject.infra.entity.SubjectMapping;
+import com.wxy.subject.infra.es.entity.SubjectInfoElasticsearch;
+import com.wxy.subject.infra.es.service.SubjectInfoElasticsearchService;
 import com.wxy.subject.infra.service.SubjectInfoService;
 import com.wxy.subject.infra.service.SubjectLabelService;
 import com.wxy.subject.infra.service.SubjectMappingService;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +46,29 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
 
     @Resource
     private SubjectLabelService subjectLabelService;
+
+    @Resource
+    private SubjectInfoElasticsearchService subjectInfoElasticsearchService;
+
+    /**
+     * @author: 32115
+     * @description: 全文检索
+     * @date: 2024/5/30
+     * @param: subjectInfoBO
+     * @return: Page<SubjectInfoElasticsearch>
+     */
+    @Override
+    @AopLogAnnotations
+    public Page<SubjectInfoElasticsearch> getSubjectPageByElasticsearch(SubjectInfoBO subjectInfoBO) {
+        // 封装参数
+        SubjectInfoElasticsearch subjectInfoEs = new SubjectInfoElasticsearch();
+        // 分页信息
+        subjectInfoEs.setPageNo(subjectInfoBO.getPageNo());
+        subjectInfoEs.setPageSize(subjectInfoBO.getPageSize());
+        subjectInfoEs.setKeyWord(subjectInfoBO.getKeyWord());
+        // 查询
+        return subjectInfoElasticsearchService.getSubjectPageList(subjectInfoEs);
+    }
 
     /**
      * @author: 32115
@@ -133,6 +161,18 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
                 }));
         // 批量插入关联关系
         Boolean mappingResult = subjectMappingService.addSubjectMapping(subjectMappingList);
-        return infoResult && handlerResult && mappingResult;
+
+        // 同步es
+        SubjectInfoElasticsearch subjectInfoElasticsearch = new SubjectInfoElasticsearch();
+        subjectInfoElasticsearch.setDocId(new IdWorkerUtil(1, 1, 1).nextId());
+        subjectInfoElasticsearch.setSubjectId(subjectInfo.getId());
+        subjectInfoElasticsearch.setSubjectAnswer(subjectInfoBO.getSubjectAnswer());
+        subjectInfoElasticsearch.setCreateTime(new Date().getTime());
+        subjectInfoElasticsearch.setCreateUser(ThreadLocalUtil.getLoginId());
+        subjectInfoElasticsearch.setSubjectName(subjectInfo.getSubjectName());
+        subjectInfoElasticsearch.setSubjectType(subjectInfo.getSubjectType());
+        Boolean insertEs = subjectInfoElasticsearchService.insert(subjectInfoElasticsearch);
+
+        return infoResult && handlerResult && mappingResult && insertEs;
     }
 }

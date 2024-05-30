@@ -9,6 +9,7 @@ import com.wxy.subject.common.aop.AopLogAnnotations;
 import com.wxy.subject.common.entity.Result;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 import com.wxy.subject.domain.service.SubjectInfoDomainService;
+import com.wxy.subject.infra.es.entity.SubjectInfoElasticsearch;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -118,6 +119,33 @@ public class SubjectController {
                     .CONVERTER.converterBoToDto(boResult);
             // 返回结果
             return Result.success(dtoResult);
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: 全文检索查询
+     * @date: 2024/5/30
+     * @param: subjectInfoDto
+     * @return: Result<Page < SubjectInfoElasticsearch>>
+     */
+    @RequestMapping("/getSubjectPageBySearch")
+    @AopLogAnnotations
+    public Result<Page<SubjectInfoElasticsearch>> getSubjectPageByElasticsearch(@RequestBody SubjectInfoDto subjectInfoDto){
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(subjectInfoDto.getKeyWord(), "关键字不能为空");
+            // DTO 转换 BO
+            SubjectInfoBO subjectInfoBO = SubjectInfoDtoConverter
+                    .CONVERTER.converterDtoToBo(subjectInfoDto);
+            // 调用domain层service进行查询
+            Page<SubjectInfoElasticsearch> subjectInfoElasticsearchPage = subjectInfoDomainService
+                    .getSubjectPageByElasticsearch(subjectInfoBO);
+            // 返回结果
+            return Result.success(subjectInfoElasticsearchPage);
         } catch (Exception e) {
             log.error("Exception:", e);
             return Result.error(e.getMessage());

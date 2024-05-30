@@ -1,6 +1,7 @@
 package com.wxy.subject.domain.service.impl;
 
 import com.wxy.subject.common.aop.AopLogAnnotations;
+import com.wxy.subject.common.utils.CacheUtil;
 import com.wxy.subject.domain.converter.SubjectCategoryBOConverter;
 import com.wxy.subject.domain.converter.SubjectLabelBOConverter;
 import com.wxy.subject.domain.entity.SubjectCategoryBO;
@@ -45,6 +46,9 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
 
     @Resource
     private ThreadPoolExecutor labelThreadPool;
+
+    @Resource
+    private CacheUtil<SubjectCategoryBO> cacheUtil;
 
     /**
      * @author: 32115
@@ -108,12 +112,26 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
      * @return: List<SubjectCategoryBO>
      */
     @Override
-    @Transactional
     @AopLogAnnotations
     public List<SubjectCategoryBO> getLabelByCategoryId(SubjectCategoryBO subjectCategoryBO) {
+        // 构造本地缓存key
+        String cacheKey = "categoryAndLabel." + subjectCategoryBO.getId();
+        // 使用本地缓存工具类查询数据 如果本地缓存有数据就走缓存减少查询次数
+        return cacheUtil.getResult(cacheKey,
+                SubjectCategoryBO.class, (key) -> getSubjectCategoryBOS(subjectCategoryBO.getId()));
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据分类id查询分类信息
+     * @date: 2024/5/26
+     * @param: subjectCategoryBO
+     * @return: List<SubjectCategoryBO>
+     */
+    private List<SubjectCategoryBO> getSubjectCategoryBOS(Long categoryId) {
         // 根据一级分类id查询二级分类
         SubjectCategory subjectCategory = new SubjectCategory();
-        subjectCategory.setParentId(subjectCategoryBO.getId());
+        subjectCategory.setParentId(categoryId);
         List<SubjectCategory> subjectCategoryList =
                 subjectCategoryService.getPrimaryCategoryList(subjectCategory);
         // category转bo
@@ -157,7 +175,6 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
                 categoryBO.setSubjectLabelBOList(map.get(categoryBO.getId()));
             }
         });
-        // 返回结果
         return subjectCategoryBOList;
     }
 

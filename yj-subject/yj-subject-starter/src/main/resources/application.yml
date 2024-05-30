@@ -21,3 +21,8 @@ mybatis-flex:
       value: snowFlakeId
     logic-delete-column: is_deleted
     print-banner: off
+elasticsearch:
+  cluster:
+    clusterInfoList[0]:
+      name: 00ec21e3bba6
+      nodes: 192.168.200.129:9200

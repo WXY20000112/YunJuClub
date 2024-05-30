@@ -2,6 +2,7 @@ package com.wxy.subject.domain.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
+import com.wxy.subject.infra.es.entity.SubjectInfoElasticsearch;
 
 /**
  * @program: YunJuClub-Flex
@@ -19,4 +20,7 @@ public interface SubjectInfoDomainService {
 
     // 查询题目详情
     SubjectInfoBO getSubjectInfo(SubjectInfoBO subjectInfoBO);
+
+    // 全文检索分页查询
+    Page<SubjectInfoElasticsearch> getSubjectPageByElasticsearch(SubjectInfoBO subjectInfoBO);
 }
