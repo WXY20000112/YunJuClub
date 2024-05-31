@@ -2,7 +2,9 @@ package com.wxy.subject.domain.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.common.aop.AopLogAnnotations;
+import com.wxy.subject.common.constant.SubjectConstant;
 import com.wxy.subject.common.utils.IdWorkerUtil;
+import com.wxy.subject.common.utils.RedisUtil;
 import com.wxy.subject.common.utils.ThreadLocalUtil;
 import com.wxy.subject.domain.converter.SubjectInfoBOConverter;
 import com.wxy.subject.domain.entity.SubjectFactoryBO;
@@ -10,21 +12,24 @@ import com.wxy.subject.domain.entity.SubjectInfoBO;
 import com.wxy.subject.domain.handler.SubjectTypeFactory;
 import com.wxy.subject.domain.handler.SubjectTypeHandler;
 import com.wxy.subject.domain.service.SubjectInfoDomainService;
+import com.wxy.subject.domain.service.SubjectLikedDomainService;
 import com.wxy.subject.infra.entity.SubjectInfo;
 import com.wxy.subject.infra.entity.SubjectLabel;
 import com.wxy.subject.infra.entity.SubjectMapping;
 import com.wxy.subject.infra.es.entity.SubjectInfoElasticsearch;
 import com.wxy.subject.infra.es.service.SubjectInfoElasticsearchService;
+import com.wxy.subject.infra.rpc.entity.AuthUser;
+import com.wxy.subject.infra.rpc.feign.AuthUserRpc;
 import com.wxy.subject.infra.service.SubjectInfoService;
 import com.wxy.subject.infra.service.SubjectLabelService;
 import com.wxy.subject.infra.service.SubjectMappingService;
 import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: YunJuClub-Flex
@@ -49,6 +54,50 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
 
     @Resource
     private SubjectInfoElasticsearchService subjectInfoElasticsearchService;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private AuthUserRpc authUserRpc;
+
+    @Resource
+    private SubjectLikedDomainService subjectLikedDomainService;
+
+    /**
+     * @author: 32115
+     * @description: 获取贡献列表
+     * @date: 2024/5/31
+     * @return: List<SubjectInfoBO>
+     */
+    @Override
+    @AopLogAnnotations
+    public List<SubjectInfoBO> getContributeList() {
+        // Redis获取贡献列表
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = redisUtil
+                .rankWithScore(
+                        SubjectConstant.SUBJECT_RANK_KEY,
+                        SubjectConstant.SUBJECT_RANK_START,
+                        SubjectConstant.SUBJECT_RANK_END
+                );
+        // 如果没有查到结果就返回空列表
+        if (CollectionUtils.isEmpty(typedTuples)) return Collections.emptyList();
+        // 封装需要返回的信息
+        return typedTuples.stream().map(
+                typedTuple -> {
+                    SubjectInfoBO subjectInfoBO = new SubjectInfoBO();
+                    // 设置出题量
+                    subjectInfoBO.setSubjectCount(Objects.requireNonNull(typedTuple.getScore()).intValue());
+                    // 通过openfeign调用获取用户信息
+                    AuthUser userInfo = authUserRpc.getUserInfo(typedTuple.getValue());
+                    // 设置用户昵称
+                    subjectInfoBO.setCreateUser(userInfo.getNickName());
+                    // 设置用户头像
+                    subjectInfoBO.setCreateUserAvatar(userInfo.getAvatar());
+                    return subjectInfoBO;
+                }
+        ).toList();
+    }
 
     /**
      * @author: 32115
@@ -97,6 +146,14 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
         // 封装labelNameList
         boResult.setLabelNameList(subjectLabelList.stream()
                 .map(SubjectLabel::getLabelName).toList());
+        // 从redis中查询点赞信息
+        // 判断当前用户有没有点赞过这个题目
+        boResult.setLiked(subjectLikedDomainService
+                .isLiked(String.valueOf(subjectInfoBO.getId()), ThreadLocalUtil.getLoginId()));
+        // 获取点赞数量
+        boResult.setLikedCount(subjectLikedDomainService
+                .getLikedCount(String.valueOf(subjectInfoBO.getId())));
+        // 返回
         return boResult;
     }
 
@@ -172,6 +229,9 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
         subjectInfoElasticsearch.setSubjectName(subjectInfo.getSubjectName());
         subjectInfoElasticsearch.setSubjectType(subjectInfo.getSubjectType());
         Boolean insertEs = subjectInfoElasticsearchService.insert(subjectInfoElasticsearch);
+
+        // 放入redis 计入排行榜
+        redisUtil.addScore(SubjectConstant.SUBJECT_RANK_KEY, ThreadLocalUtil.getLoginId(), 1);
 
         return infoResult && handlerResult && mappingResult && insertEs;
     }

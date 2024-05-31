@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: 题目相关功能控制器
@@ -149,6 +151,29 @@ public class SubjectController {
         } catch (Exception e) {
             log.error("Exception:", e);
             return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: 获取题目贡献榜
+     * @date: 2024/5/31
+     * @return: Result<SubjectInfoDto>
+     */
+    @RequestMapping("/getContributeList")
+    @AopLogAnnotations
+    public Result<List<SubjectInfoDto>> getContributeList(){
+        try {
+            // 调用domain层service进行查询
+            List<SubjectInfoBO> boList = subjectInfoDomainService.getContributeList();
+            // BO 转换 DTO
+            List<SubjectInfoDto> dtoList = SubjectInfoDtoConverter
+                    .CONVERTER.converterBoListToDtoList(boList);
+            // 返回结果
+            return Result.success(dtoList);
+        } catch (Exception e) {
+            log.error("SubjectCategoryController.getContributeList.error:{}", e.getMessage(), e);
+            return Result.error("获取贡献榜失败");
         }
     }
 }

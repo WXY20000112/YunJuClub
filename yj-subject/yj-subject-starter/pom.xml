@@ -76,6 +76,11 @@
             <version>1.9.22</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
     </dependencies>
 
     <!-- maven打包插件配置 -->

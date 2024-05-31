@@ -4,6 +4,8 @@ import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.domain.entity.SubjectInfoBO;
 import com.wxy.subject.infra.es.entity.SubjectInfoElasticsearch;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: SubjectInfoDomainService
@@ -23,4 +25,7 @@ public interface SubjectInfoDomainService {
 
     // 全文检索分页查询
     Page<SubjectInfoElasticsearch> getSubjectPageByElasticsearch(SubjectInfoBO subjectInfoBO);
+
+    // 查询贡献榜
+    List<SubjectInfoBO> getContributeList();
 }
