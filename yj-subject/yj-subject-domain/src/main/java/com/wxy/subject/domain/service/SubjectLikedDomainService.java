@@ -1,5 +1,6 @@
 package com.wxy.subject.domain.service;
 
+import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.domain.entity.SubjectLikedBO;
 
 /**
@@ -21,4 +22,7 @@ public interface SubjectLikedDomainService {
 
     // 同步点赞数据到数据库
     void syncSubjectLiked();
+
+    // 获取点赞列表
+    Page<SubjectLikedBO> getSubjectLikedPage(SubjectLikedBO subjectLikedBO);
 }

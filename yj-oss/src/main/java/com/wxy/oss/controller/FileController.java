@@ -37,7 +37,9 @@ public class FileController {
     }
 
     @RequestMapping("/getUrl")
-    public String getUrl(String bucketName, String objectName) {
+    public String getUrl(
+            @RequestParam("bucketName") String bucketName,
+            @RequestParam("objectName") String objectName) {
         return fileService.getUrl(bucketName, objectName);
     }
 }

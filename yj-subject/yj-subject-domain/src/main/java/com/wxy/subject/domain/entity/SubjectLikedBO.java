@@ -41,6 +41,16 @@ public class SubjectLikedBO implements Serializable {
      * 是否删除 0为未删除 1为已删除
      */
     private Integer isDeleted;
+
+    /**
+     * 第几页
+     */
+    private Integer pageNo;
+
+    /**
+     * 每页数据条数
+     */
+    private Integer pageSize;
     
 }
 

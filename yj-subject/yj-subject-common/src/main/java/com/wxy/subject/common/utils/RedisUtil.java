@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -117,7 +118,9 @@ public class RedisUtil {
     }
 
     public Integer getHashCount(String key) {
-        return Integer.valueOf(String.valueOf(redisTemplate.opsForValue().get(key)));
+        Object object = redisTemplate.opsForValue().get(key);
+        if (Objects.isNull(object)) return 0;
+        return Integer.valueOf(String.valueOf(object));
     }
 
     public void incrementHashCount(String key, Integer count) {

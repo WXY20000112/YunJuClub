@@ -9,6 +9,8 @@ import com.wxy.subject.infra.service.SubjectInfoService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.wxy.subject.infra.entity.table.SubjectInfoTableDef.SUBJECT_INFO;
 import static com.wxy.subject.infra.entity.table.SubjectMappingTableDef.SUBJECT_MAPPING;
 
@@ -25,6 +27,33 @@ public class SubjectInfoServiceImpl
 
     @Resource
     private SubjectInfoMapper subjectInfoMapper;
+
+    /**
+     * @author: 32115
+     * @description: 获取上一题和下一题的id
+     * @date: 2024/6/1
+     * @param: categoryId
+     * @param: labelId
+     * @param: id
+     * @param: cursor
+     * @return: Long
+     */
+    @Override
+    public Long getLastSubjectId(Long categoryId, Long labelId, Long subjectId, int cursor) {
+        // 构造查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(SUBJECT_INFO.DEFAULT_COLUMNS)
+                .from(SUBJECT_INFO.as("si"))
+                .leftJoin(SUBJECT_MAPPING).as("sm").on(SUBJECT_INFO.ID.eq(SUBJECT_MAPPING.SUBJECT_ID))
+                .where(SUBJECT_MAPPING.CATEGORY_ID.eq(categoryId))
+                .and(SUBJECT_MAPPING.LABEL_ID.eq(labelId))
+                .and(SUBJECT_INFO.ID.lt(subjectId, cursor == 0))
+                .and(SUBJECT_INFO.ID.gt(subjectId, cursor == 1))
+                .orderBy(SUBJECT_INFO.ID.asc());
+        List<SubjectInfo> subjectInfoList = this.list(queryWrapper);
+        return cursor == 0 ? subjectInfoList.getLast().getId() :
+                subjectInfoList.getFirst().getId();
+    }
 
     /**
      * @author: 32115

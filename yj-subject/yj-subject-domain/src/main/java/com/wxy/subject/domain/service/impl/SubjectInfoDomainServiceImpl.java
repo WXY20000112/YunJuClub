@@ -153,6 +153,26 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
         // 获取点赞数量
         boResult.setLikedCount(subjectLikedDomainService
                 .getLikedCount(String.valueOf(subjectInfoBO.getId())));
+        // 获取题目的上一题的id和下一题的id
+        // 如果没有分类id或者标签id就返回
+        if (subjectInfoBO.getCategoryId() == null || subjectInfoBO.getLabelId() == null)
+            // 返回
+            return boResult;
+        // 查询上一题
+        Long lastSubjectId = subjectInfoService.getLastSubjectId(
+                subjectInfoBO.getCategoryId(),
+                subjectInfoBO.getLabelId(),
+                subjectInfoBO.getId(), 0
+        );
+        // 查下一题
+        Long nextSubjectId = subjectInfoService.getLastSubjectId(
+                subjectInfoBO.getCategoryId(),
+                subjectInfoBO.getLabelId(),
+                subjectInfoBO.getId(), 1
+        );
+        // 封装
+        boResult.setNextSubjectId(nextSubjectId);
+        boResult.setLastSubjectId(lastSubjectId);
         // 返回
         return boResult;
     }

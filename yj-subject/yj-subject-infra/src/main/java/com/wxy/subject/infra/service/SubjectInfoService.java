@@ -21,4 +21,7 @@ public interface SubjectInfoService extends IService<SubjectInfo> {
 
     // 根据id查询题目
     SubjectInfo getSubjectInfoById(Long id);
+
+    // 查询当前题目的上一题与下一题的id
+    Long getLastSubjectId(Long categoryId, Long labelId, Long subjectId, int cursor);
 }

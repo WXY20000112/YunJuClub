@@ -1,5 +1,6 @@
 package com.wxy.subject.application.converter;
 
+import com.mybatisflex.core.paginate.Page;
 import com.wxy.subject.application.dto.SubjectLikedDto;
 import com.wxy.subject.domain.entity.SubjectLikedBO;
 import org.mapstruct.Mapper;
@@ -18,4 +19,7 @@ public interface SubjectLikedDtoConverter {
 
     // SubjectLikedDto 转成 SubjectLikedBO
     SubjectLikedBO converterDtoToBo(SubjectLikedDto subjectLikedDto);
+
+    // SubjectLikedBOPage 转成 SubjectLikedDtoPage
+    Page<SubjectLikedDto> converterBoPageToDtoPage(Page<SubjectLikedBO> subjectLikedBOPage);
 }

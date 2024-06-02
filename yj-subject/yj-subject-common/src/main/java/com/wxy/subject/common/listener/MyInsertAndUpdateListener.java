@@ -52,8 +52,11 @@ public class MyInsertAndUpdateListener implements InsertListener, UpdateListener
         // 3、调用invoke方法执行获取到的类方法，设置字段值
         setCreatedTime.invoke(object, new Date());
         setUpdateTime.invoke(object, new Date());
-        setCreatedBy.invoke(object, ThreadLocalUtil.getLoginId());
-        setUpdateBy.invoke(object, ThreadLocalUtil.getLoginId());
+        // 如果获取登录用户不为空，再去设置填充字段 如果获取不到 就不在执行填充操作
+        if (ThreadLocalUtil.getLoginId() != null){
+            setCreatedBy.invoke(object, ThreadLocalUtil.getLoginId());
+            setUpdateBy.invoke(object, ThreadLocalUtil.getLoginId());
+        }
     }
 
     /**
@@ -76,6 +79,9 @@ public class MyInsertAndUpdateListener implements InsertListener, UpdateListener
 
         // 3、调用invoke方法执行获取到的类方法，设置字段值
         setUpdateTime.invoke(object, new Date());
-        setUpdateBy.invoke(object, ThreadLocalUtil.getLoginId());
+        // 如果获取登录用户不为空，再去设置填充字段 如果获取不到 就不在执行填充操作
+        if (ThreadLocalUtil.getLoginId() != null){
+            setUpdateBy.invoke(object, ThreadLocalUtil.getLoginId());
+        }
     }
 }
