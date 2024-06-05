@@ -66,6 +66,28 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
 
     /**
      * @author: 32115
+     * @description: 获取题目列表
+     * @date: 2024/6/4
+     * @param: subjectCount
+     * @param: subjectType
+     * @param: excludeSubjectIds
+     * @return: List<SubjectInfoBO>
+     */
+    @Override
+    @AopLogAnnotations
+    public List<SubjectInfoBO> getSubjectInfoList(
+            Integer subjectCount, Integer subjectType,
+            List<Long> excludeSubjectIds, List<String> assembleIds) {
+        // 调用service层获取题目列表
+        List<SubjectInfo> subjectInfoList = subjectInfoService
+                .getSubjectInfoList(subjectCount, subjectType, excludeSubjectIds, assembleIds);
+        // entity -> bo
+        return SubjectInfoBOConverter.CONVERTER
+                .converterInfoListToBoList(subjectInfoList);
+    }
+
+    /**
+     * @author: 32115
      * @description: 获取贡献列表
      * @date: 2024/5/31
      * @return: List<SubjectInfoBO>

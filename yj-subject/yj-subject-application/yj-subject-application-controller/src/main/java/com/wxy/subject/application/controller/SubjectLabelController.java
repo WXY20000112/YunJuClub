@@ -11,6 +11,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -130,6 +131,55 @@ public class SubjectLabelController {
             return Result.success(subjectLabelDtoList);
         } catch (Exception e) {
             log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: feign远程调用 根据分类id和题目类型查询标签
+     * @date: 2024/6/3
+     * @param: categoryId
+     * @return: Result<List < SubjectLabelDto>>
+     */
+    @RequestMapping("/getLabelByCategoryId")
+    @AopLogAnnotations
+    public Result<List<SubjectLabelDto>> getLabelByCategoryId(@RequestParam("categoryId") Long categoryId){
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(categoryId, "分类id不能为空");
+            // 调用业务层
+            List<SubjectLabelBO> subjectLabelBOList =
+                    subjectLabelDomainService.getLabelByCategoryIdAndSubjectType(categoryId);
+            // BO 转 Dto
+            List<SubjectLabelDto> subjectLabelDtoList = SubjectLabelDtoConverter
+                    .CONVERTER.converterBoToDto(subjectLabelBOList);
+            // 返回结果
+            return Result.success(subjectLabelDtoList);
+        } catch (Exception e) {
+            log.error("FeignClient.getLabelByCategoryId.error:{}:", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据标签id查询标签
+     * @date: 2024/6/5
+     * @param: id
+     * @return: Result<SubjectLabelDto>
+     */
+    @RequestMapping("/getLabelById")
+    @AopLogAnnotations
+    Result<SubjectLabelDto> getLabelById(@RequestParam("id") Long id){
+        try {
+            // 调用业务层
+            SubjectLabelBO subjectLabelBO = subjectLabelDomainService.getLabelById(id);
+            // BO 转 Dto
+            return Result.success(SubjectLabelDtoConverter
+                    .CONVERTER.converterLabelBoToLabelDto(subjectLabelBO));
+        } catch (Exception e) {
+            log.error("FeignClient.getLabelById.error:{}:", e.getMessage(), e);
             return Result.error(e.getMessage());
         }
     }

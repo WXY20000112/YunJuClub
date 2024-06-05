@@ -3,6 +3,9 @@ package com.wxy.subject.infra.mapper;
 import com.mybatisflex.core.BaseMapper;
 import com.wxy.subject.infra.entity.SubjectInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @program: YunJuClub-Flex
@@ -12,4 +15,12 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SubjectInfoMapper extends BaseMapper<SubjectInfo> {
+
+    // 获取题目信息
+    List<SubjectInfo> getSubjectInfoList(
+            @Param("subjectCount") Integer subjectCount,
+            @Param("subjectType")Integer subjectType,
+            @Param("excludeSubjectIds")List<Long> excludeSubjectIds,
+            @Param("assembleIds")List<String> assembleIds
+    );
 }

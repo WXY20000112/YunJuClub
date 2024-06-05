@@ -23,4 +23,7 @@ public interface SubjectLabelDtoConverter {
 
     // Bo转Dto
     List<SubjectLabelDto> converterBoToDto(List<SubjectLabelBO> subjectLabelBOList);
+
+    // Bo转Dto
+    SubjectLabelDto converterLabelBoToLabelDto(SubjectLabelBO subjectLabelBO);
 }

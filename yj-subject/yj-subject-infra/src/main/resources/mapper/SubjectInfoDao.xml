@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxy.subject.infra.mapper.SubjectInfoMapper">
+
+    <resultMap type="com.wxy.subject.infra.entity.SubjectInfo" id="SubjectInfoMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="subjectName" column="subject_name" jdbcType="VARCHAR"/>
+        <result property="subjectDifficult" column="subject_difficult" jdbcType="INTEGER"/>
+        <result property="settleName" column="settle_name" jdbcType="VARCHAR"/>
+        <result property="subjectType" column="subject_type" jdbcType="INTEGER"/>
+        <result property="subjectScore" column="subject_score" jdbcType="INTEGER"/>
+        <result property="subjectParse" column="subject_parse" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="getSubjectInfoList" resultMap="SubjectInfoMap">
+        select
+            distinct si.id,
+            si.subject_name,
+            si.subject_difficult,
+            si.settle_name,
+            si.subject_type,
+            si.subject_score,
+            si.subject_parse,
+            si.created_by,
+            si.created_time,
+            si.update_by,
+            si.update_time,
+            si.is_deleted
+        from subject_info as si, subject_mapping as sm
+        where si.id = sm.subject_id
+        <if test="subjectType!= null">
+            and si.subject_type = #{subjectType}
+        </if>
+        <if test="excludeSubjectIds != null and excludeSubjectIds.size() > 0">
+            and sm.subject_id not in
+            <foreach collection = "excludeSubjectIds" item = "item" open = "(" close = ")" separator = ",">
+                #{item}
+            </foreach>
+        </if>
+        and CONCAT(sm.category_id, '-', sm.label_id) in
+        <foreach collection = "assembleIds" item = "item" open = "(" close = ")" separator = ",">
+            #{item}
+        </foreach>
+        order by rand() LIMIT #{subjectCount};
+    </select>
+
+</mapper>
+

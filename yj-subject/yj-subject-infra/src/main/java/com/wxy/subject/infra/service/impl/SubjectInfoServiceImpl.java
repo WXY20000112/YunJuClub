@@ -30,6 +30,24 @@ public class SubjectInfoServiceImpl
 
     /**
      * @author: 32115
+     * @description: 获取题目列表
+     * @date: 2024/6/4
+     * @param: subjectCount
+     * @param: subjectType
+     * @param: excludeSubjectIds
+     * @return: List<SubjectInfo>
+     */
+    @Override
+    public List<SubjectInfo> getSubjectInfoList(
+            Integer subjectCount, Integer subjectType,
+            List<Long> excludeSubjectIds, List<String> assembleIds) {
+        // 调用mapper层方法
+        return subjectInfoMapper.getSubjectInfoList(
+                subjectCount, subjectType, excludeSubjectIds, assembleIds);
+    }
+
+    /**
+     * @author: 32115
      * @description: 获取上一题和下一题的id
      * @date: 2024/6/1
      * @param: categoryId

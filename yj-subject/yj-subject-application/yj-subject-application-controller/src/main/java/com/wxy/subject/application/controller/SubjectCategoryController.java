@@ -13,6 +13,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -204,6 +205,56 @@ public class SubjectCategoryController {
                     .deleteCategory(subjectCategoryBO) ? Result.success() : Result.error();
         } catch (Exception e) {
             log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: feign远程调用 根据题目类型查询二级分类
+     * @date: 2024/6/3
+     * @return: Result<SubjectCategoryDto>
+     */
+    @RequestMapping("/getSecondCategoryBySubjectType")
+    @AopLogAnnotations
+    public Result<List<SubjectCategoryDto>> getCategoryBySubject(){
+        try {
+            // 调用业务层查询二级分类
+            List<SubjectCategoryBO> subjectCategoryBOList =
+                    subjectCategoryDomainService.getCategoryBySubjectType();
+            // 将SubjectCategoryBO转化为SubjectCategoryDto并返回
+            List<SubjectCategoryDto> subjectCategoryDtoList = SubjectCategoryDtoConverter
+                    .CONVERTER.convertCategoryBOToDto(subjectCategoryBOList);
+            // 返回
+            return Result.success(subjectCategoryDtoList);
+        } catch (Exception e) {
+            log.error("FeignClient.getCategoryBySubject.error:{}", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: feign远程调用 根据id查询一级分类
+     * @date: 2024/6/3
+     * @return: Result<SubjectCategoryDto>
+     */
+    @RequestMapping("/getSubjectCategoryById")
+    @AopLogAnnotations
+    public Result<SubjectCategoryDto> getSubjectCategoryById(@RequestParam("parentId") Long id){
+        try {
+            // 参数校验
+            Preconditions.checkNotNull(id, "分类id不能为空");
+            // 调用业务层查询二级分类
+            SubjectCategoryBO subjectCategoryBO =
+                    subjectCategoryDomainService.getSubjectCategoryById(id);
+            // 将SubjectCategoryBO转化为SubjectCategoryDto并返回
+            SubjectCategoryDto subjectCategoryDto = SubjectCategoryDtoConverter
+                    .CONVERTER.convertCategoryBoToDto(subjectCategoryBO);
+            // 返回
+            return Result.success(subjectCategoryDto);
+        } catch (Exception e) {
+            log.error("FeignClient.getSubjectCategoryById.error:{}", e.getMessage(), e);
             return Result.error(e.getMessage());
         }
     }

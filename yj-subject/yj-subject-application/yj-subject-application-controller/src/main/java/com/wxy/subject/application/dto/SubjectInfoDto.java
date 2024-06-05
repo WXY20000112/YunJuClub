@@ -142,5 +142,15 @@ public class SubjectInfoDto implements Serializable {
      * 上一题
      */
     private Long lastSubjectId;
+
+    /**
+     * 要排除题目的id列表
+     */
+    private List<Long> excludeSubjectIds;
+
+    /**
+     * 分类与标签组合的ids
+     */
+    private List<String> assembleIds;
 }
 

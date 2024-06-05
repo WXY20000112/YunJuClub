@@ -28,4 +28,9 @@ public interface SubjectInfoDomainService {
 
     // 查询贡献榜
     List<SubjectInfoBO> getContributeList();
+
+    // 查询题目列表
+    List<SubjectInfoBO> getSubjectInfoList(
+            Integer subjectCount, Integer subjectType,
+            List<Long> excludeSubjectIds, List<String> assembleIds);
 }

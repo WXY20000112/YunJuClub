@@ -26,4 +26,10 @@ public interface SubjectCategoryDomainService{
 
     // 删除分类
     Boolean deleteCategory(SubjectCategoryBO subjectCategoryBO);
+
+    // 根据题目类型查询二级分类
+    List<SubjectCategoryBO> getCategoryBySubjectType();
+
+    // 根据id查询分类
+    SubjectCategoryBO getSubjectCategoryById(Long id);
 }

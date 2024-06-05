@@ -176,4 +176,32 @@ public class SubjectController {
             return Result.error("获取贡献榜失败");
         }
     }
+
+    /**
+     * @author: 32115
+     * @description: feign调用 获取题目信息
+     * @date: 2024/6/4
+     * @param: subjectInfoDto
+     * @return: Result<List < SubjectInfoDto>>
+     */
+    @RequestMapping("/getSubjectInfoList")
+    @AopLogAnnotations
+    Result<List<SubjectInfoDto>> getSubjectInfoList(@RequestBody SubjectInfoDto subjectInfoDto){
+        try {
+            // 调用domain层service进行查询
+            List<SubjectInfoBO> boList = subjectInfoDomainService
+                    .getSubjectInfoList(subjectInfoDto.getSubjectCount(),
+                            subjectInfoDto.getSubjectType(),
+                            subjectInfoDto.getExcludeSubjectIds(),
+                            subjectInfoDto.getAssembleIds());
+            // BO 转换 DTO
+            List<SubjectInfoDto> dtoList = SubjectInfoDtoConverter
+                    .CONVERTER.converterBoListToDtoList(boList);
+            // 返回结果
+            return Result.success(dtoList);
+        } catch (Exception e) {
+            log.error("Feign.SubjectController.getSubjectInfoList.error:{}:", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
 }

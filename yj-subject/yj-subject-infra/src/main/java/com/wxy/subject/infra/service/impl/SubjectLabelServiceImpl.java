@@ -32,6 +32,40 @@ public class SubjectLabelServiceImpl
 
     /**
      * @author: 32115
+     * @description: 根据标签id获取标签
+     * @date: 2024/6/5
+     * @param: id
+     * @return: SubjectLabel
+     */
+    @Override
+    public SubjectLabel getLabelByLabelId(Long id) {
+        return this.getById(id);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据二级分类id和题目类型获取标签
+     * @date: 2024/6/3
+     * @param: categoryId
+     * @param: subjectTypeList
+     * @return: List<SubjectLabel>
+     */
+    @Override
+    public List<SubjectLabel> getLabelByCategoryId(Long categoryId, List<Integer> subjectTypeList) {
+        // 构造查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(SUBJECT_LABEL.DEFAULT_COLUMNS)
+                .from(SUBJECT_LABEL.as("sl"))
+                .leftJoin(SUBJECT_MAPPING.as("sm")).on(SUBJECT_MAPPING.LABEL_ID.eq(SUBJECT_LABEL.ID))
+                .leftJoin(SUBJECT_INFO.as("si")).on(SUBJECT_MAPPING.SUBJECT_ID.eq(SUBJECT_INFO.ID))
+                .where(SUBJECT_MAPPING.CATEGORY_ID.eq(categoryId))
+                .and(SUBJECT_INFO.SUBJECT_TYPE.in(subjectTypeList))
+                .groupBy(SUBJECT_LABEL.ID);
+        return this.list(queryWrapper);
+    }
+
+    /**
+     * @author: 32115
      * @description: 根据二级分类id获取标签
      * @date: 2024/5/16
      * @param: categoryId

@@ -24,4 +24,7 @@ public interface SubjectLabelBOConverter {
 
     // label转Bo
     List<SubjectLabelBO> converterLabelToBo(List<SubjectLabel> subjectLabelList);
+
+    // label转Bo
+    SubjectLabelBO converterEntityToBo(SubjectLabel subjectLabel);
 }

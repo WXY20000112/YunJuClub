@@ -1,6 +1,7 @@
 package com.wxy.subject.domain.service.impl;
 
 import com.wxy.subject.common.aop.AopLogAnnotations;
+import com.wxy.subject.common.enums.SubjectTypeEnum;
 import com.wxy.subject.common.utils.CacheUtil;
 import com.wxy.subject.domain.converter.SubjectCategoryBOConverter;
 import com.wxy.subject.domain.converter.SubjectLabelBOConverter;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +68,46 @@ public class SubjectCategoryDomainServiceImpl implements SubjectCategoryDomainSe
                 .CONVERTER.convertCategoryBoToCategory(subjectCategoryBO);
         // 保存分类信息
         return subjectCategoryService.insertCategory(subjectCategory);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据id查询一级分类
+     * @date: 2024/6/3
+     * @param: id
+     * @return: SubjectCategoryBO
+     */
+    @Override
+    @AopLogAnnotations
+    public SubjectCategoryBO getSubjectCategoryById(Long id) {
+        // 查询分类信息
+        SubjectCategory subjectCategory =
+                subjectCategoryService.getCategoryById(id);
+        // 转BO并返回
+        return SubjectCategoryBOConverter.CONVERTER
+                .convertEntityToBO(subjectCategory);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据题目类型查询二级分类
+     * @date: 2024/6/3
+     * @return: List<SubjectCategoryBO>
+     */
+    @Override
+    @AopLogAnnotations
+    public List<SubjectCategoryBO> getCategoryBySubjectType() {
+        // 组装要查询的题目类型
+        List<Integer> subjectTypeList = new ArrayList<>();
+        subjectTypeList.add(SubjectTypeEnum.RADIO.getCode());
+        subjectTypeList.add(SubjectTypeEnum.MULTIPLE.getCode());
+        subjectTypeList.add(SubjectTypeEnum.JUDGE.getCode());
+        // 查询二级分类
+        List<SubjectCategory> subjectCategoryList =
+                subjectCategoryService.getCategoryBySubjectType(subjectTypeList);
+        // 转BO并返回
+        return SubjectCategoryBOConverter.CONVERTER
+                .convertCategoryToBO(subjectCategoryList);
     }
 
     /**

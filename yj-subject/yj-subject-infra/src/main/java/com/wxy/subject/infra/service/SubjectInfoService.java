@@ -4,6 +4,8 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
 import com.wxy.subject.infra.entity.SubjectInfo;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: SubjectInfoService
@@ -24,4 +26,9 @@ public interface SubjectInfoService extends IService<SubjectInfo> {
 
     // 查询当前题目的上一题与下一题的id
     Long getLastSubjectId(Long categoryId, Long labelId, Long subjectId, int cursor);
+
+    // 查询题目
+    List<SubjectInfo> getSubjectInfoList(
+            Integer subjectCount, Integer subjectType,
+            List<Long> excludeSubjectIds, List<String> assembleIds);
 }

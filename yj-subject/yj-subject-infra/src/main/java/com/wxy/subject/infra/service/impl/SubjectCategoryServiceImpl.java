@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.wxy.subject.infra.entity.table.SubjectCategoryTableDef.SUBJECT_CATEGORY;
+import static com.wxy.subject.infra.entity.table.SubjectInfoTableDef.SUBJECT_INFO;
+import static com.wxy.subject.infra.entity.table.SubjectMappingTableDef.SUBJECT_MAPPING;
 
 /**
  * @program: YunJuClub-Flex
@@ -27,6 +29,27 @@ public class SubjectCategoryServiceImpl
 
     @Resource
     private SubjectCategoryMapper subjectCategoryMapper;
+
+    /**
+     * @author: 32115
+     * @description: 根据题目类型查询二级分类
+     * @date: 2024/6/3
+     * @param: subjectTypeList
+     * @return: List<SubjectCategory>
+     */
+    @Override
+    public List<SubjectCategory> getCategoryBySubjectType(List<Integer> subjectTypeList) {
+        // 构造查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(SUBJECT_CATEGORY.DEFAULT_COLUMNS)
+                .from(SUBJECT_MAPPING.as("sm"))
+                .leftJoin(SUBJECT_CATEGORY.as("sc")).on(SUBJECT_MAPPING.CATEGORY_ID.eq(SUBJECT_CATEGORY.ID))
+                .leftJoin(SUBJECT_INFO.as("si")).on(SUBJECT_MAPPING.SUBJECT_ID.eq(SUBJECT_INFO.ID))
+                .where(SUBJECT_INFO.SUBJECT_TYPE.in(subjectTypeList))
+                .and(SUBJECT_CATEGORY.CATEGORY_TYPE.eq(CategoryTypeEnum.SECOND_CATEGORY.getCode()))
+                .groupBy(SUBJECT_CATEGORY.ID);
+        return this.list(queryWrapper);
+    }
 
     /**
      * @author: 32115

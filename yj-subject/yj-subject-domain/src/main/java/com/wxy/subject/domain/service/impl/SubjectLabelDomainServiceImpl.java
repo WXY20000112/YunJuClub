@@ -2,6 +2,7 @@ package com.wxy.subject.domain.service.impl;
 
 import com.wxy.subject.common.aop.AopLogAnnotations;
 import com.wxy.subject.common.enums.CategoryTypeEnum;
+import com.wxy.subject.common.enums.SubjectTypeEnum;
 import com.wxy.subject.domain.converter.SubjectLabelBOConverter;
 import com.wxy.subject.domain.entity.SubjectLabelBO;
 import com.wxy.subject.domain.service.SubjectLabelDomainService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +33,46 @@ public class SubjectLabelDomainServiceImpl implements SubjectLabelDomainService 
 
     @Resource
     private SubjectCategoryService subjectCategoryService;
+
+    /**
+     * @author: 32115
+     * @description: 根据id查询标签信息
+     * @date: 2024/6/5
+     * @param: id
+     * @return: SubjectLabelBO
+     */
+    @Override
+    public SubjectLabelBO getLabelById(Long id) {
+        // 查询标签信息
+        SubjectLabel subjectLabel =
+                subjectLabelService.getLabelByLabelId(id);
+        // 转换为BO并返回
+        return SubjectLabelBOConverter.CONVERTER
+                .converterEntityToBo(subjectLabel);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据分类id和题目类型查询标签信息
+     * @date: 2024/6/3
+     * @param: categoryId
+     * @return: List<SubjectLabelBO>
+     */
+    @Override
+    @AopLogAnnotations
+    public List<SubjectLabelBO> getLabelByCategoryIdAndSubjectType(Long categoryId) {
+        // 组装要查询的题目类型
+        List<Integer> subjectTypeList = new ArrayList<>();
+        subjectTypeList.add(SubjectTypeEnum.RADIO.getCode());
+        subjectTypeList.add(SubjectTypeEnum.MULTIPLE.getCode());
+        subjectTypeList.add(SubjectTypeEnum.JUDGE.getCode());
+        // 查询标签信息
+        List<SubjectLabel> subjectLabelList =
+                subjectLabelService.getLabelByCategoryId(categoryId, subjectTypeList);
+        // 转换为BO并返回
+        return SubjectLabelBOConverter.CONVERTER
+                .converterLabelToBo(subjectLabelList);
+    }
 
     /**
      * @author: 32115

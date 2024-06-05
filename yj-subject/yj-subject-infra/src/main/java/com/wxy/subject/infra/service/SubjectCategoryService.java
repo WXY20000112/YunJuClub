@@ -30,4 +30,7 @@ public interface SubjectCategoryService extends IService<SubjectCategory> {
 
     // 根据分类id获取分类
     SubjectCategory getCategoryById(Long categoryId);
+
+    // 根据题目类型查询二级分类
+    List<SubjectCategory> getCategoryBySubjectType(List<Integer> subjectTypeList);
 }

@@ -22,6 +22,9 @@ public interface SubjectCategoryBOConverter {
     // BO转category
     SubjectCategory convertCategoryBoToCategory(SubjectCategoryBO subjectCategoryBO);
 
-    // category转BO
+    // categoryList转BOList
     List<SubjectCategoryBO> convertCategoryToBO(List<SubjectCategory> subjectCategoryList);
+
+    // category转BO
+    SubjectCategoryBO convertEntityToBO(SubjectCategory subjectCategory);
 }

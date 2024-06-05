@@ -7,6 +7,8 @@ import com.wxy.subject.infra.entity.SubjectInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: SubjectInfoBO与SubjectInfo转换器
@@ -26,4 +28,7 @@ public interface SubjectInfoBOConverter {
 
     // SubjectInfo和SubjectFactoryBo转SubjectInfoBO
     SubjectInfoBO convertInfoAndFactoryBoToBo(SubjectFactoryBO subjectFactoryBO, SubjectInfo subjectInfo);
+
+    // SubjectInfoList转SubjectInfoBOList
+    List<SubjectInfoBO> converterInfoListToBoList(List<SubjectInfo> subjectInfoList);
 }

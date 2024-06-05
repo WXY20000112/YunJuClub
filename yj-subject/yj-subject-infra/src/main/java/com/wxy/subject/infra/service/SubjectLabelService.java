@@ -33,4 +33,10 @@ public interface SubjectLabelService extends IService<SubjectLabel> {
 
     // 根据二级分类id查询标签
     List<SubjectLabel> getLabelListByCategoryId(Long categoryId);
+
+    // 根据二级分类id和题目类型查询标签
+    List<SubjectLabel> getLabelByCategoryId(Long categoryId, List<Integer> subjectTypeList);
+
+    // 根据标签id查询标签
+    SubjectLabel getLabelByLabelId(Long id);
 }
