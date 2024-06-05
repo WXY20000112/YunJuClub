@@ -2,30 +2,39 @@ package com.wxy.practice.server.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.wxy.practice.api.enums.SubjectTypeEnum;
+import com.wxy.practice.api.req.GetPracticeSubjectsReq;
 import com.wxy.practice.api.vo.*;
 import com.wxy.practice.server.aop.AopLogAnnotations;
 import com.wxy.practice.server.config.PracticeConfig;
+import com.wxy.practice.server.constant.PracticeConstant;
 import com.wxy.practice.server.dto.PracticeSubjectDTO;
+import com.wxy.practice.server.entity.PracticeDetail;
+import com.wxy.practice.server.entity.PracticeInfo;
 import com.wxy.practice.server.entity.PracticeSet;
 import com.wxy.practice.server.entity.PracticeSetDetail;
+import com.wxy.practice.server.enums.PracticeSetEnum;
 import com.wxy.practice.server.enums.PracticeTypeEnum;
+import com.wxy.practice.server.enums.SubjectIsAnswerEnum;
 import com.wxy.practice.server.mapper.PracticeSetMapper;
 import com.wxy.practice.server.rpc.feign.SubjectCategoryRpc;
+import com.wxy.practice.server.service.PracticeDetailService;
+import com.wxy.practice.server.service.PracticeInfoService;
 import com.wxy.practice.server.service.PracticeSetDetailService;
 import com.wxy.practice.server.service.PracticeSetService;
+import com.wxy.practice.server.utils.ThreadLocalUtil;
 import com.wxy.subject.api.entity.SubjectCategoryDto;
 import com.wxy.subject.api.entity.SubjectInfoDto;
 import com.wxy.subject.api.entity.SubjectLabelDto;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +57,110 @@ public class PracticeSetServiceImpl extends
 
     @Resource
     private PracticeSetDetailService practiceSetDetailService;
+
+    @Resource
+    private PracticeDetailService practiceDetailService;
+
+    @Resource
+    private PracticeInfoService practiceInfoService;
+
+    /**
+     * @author: 32115
+     * @description: 获取套卷以及套卷下题目信息
+     * @date: 2024/6/5
+     * @param: req
+     * @return: PracticeSubjectListVO
+     */
+    @Override
+    @AopLogAnnotations
+    public PracticeSubjectListVO getSubjectList(GetPracticeSubjectsReq req) {
+        // 创建返回对象
+        PracticeSubjectListVO practiceSubjectListVO = new PracticeSubjectListVO();
+        // 创建结合封装题目列表
+        List<PracticeSubjectDetailVO> practiceSubjectList = new ArrayList<>();
+        // 在题目详情表中根据套卷id查询题目信息
+        List<PracticeSetDetail> practiceSetDetailList =
+                practiceSetDetailService.getBySetId(req.getSetId());
+        if (CollectionUtils.isEmpty(practiceSetDetailList)) return practiceSubjectListVO;
+        // 便利题目列表封装要返回的题目信息字段
+        practiceSetDetailList.forEach(practiceSetDetail -> {
+            PracticeSubjectDetailVO practiceSubjectDetailVO = new PracticeSubjectDetailVO();
+            practiceSubjectDetailVO.setSubjectId(practiceSetDetail.getSubjectId());
+            practiceSubjectDetailVO.setSubjectType(practiceSetDetail.getSubjectType());
+            // 判断传入的practiceId是否为空 若不为空在practice_detail表中查询该题的作答情况
+            if (Objects.nonNull(req.getPracticeId())){
+                // 获取题目作答情况
+                PracticeDetail practiceDetail =
+                        practiceDetailService.getPracticeDetailByPracticeIdAndSubjectId(
+                                req.getPracticeId(), practiceSetDetail.getSubjectId(), ThreadLocalUtil.getLoginId());
+                // 如果结果不为空且作答内容不为空 说明该题已做答 则将其作答状态设置为已做答 否则未作答
+                if (Objects.nonNull(practiceDetail) && StringUtils.isNotBlank(practiceDetail.getAnswerContent())){
+                    practiceSubjectDetailVO.setIsAnswer(SubjectIsAnswerEnum.ANSWERED.getCode());
+                } else {
+                    practiceSubjectDetailVO.setIsAnswer(SubjectIsAnswerEnum.UN_ANSWERED.getCode());
+                }
+            }
+            // 将题目信息添加进集合中
+            practiceSubjectList.add(practiceSubjectDetailVO);
+        });
+        // 封装返回对象
+        practiceSubjectListVO.setSubjectList(practiceSubjectList);
+        // 根据id查询套卷信息 并将套卷名称设置为练习界面标题
+        PracticeSet practiceSet = this.getById(req.getSetId());
+        practiceSubjectListVO.setTitle(practiceSet.getSetName());
+        // 使用上下文工具类获取当前对象的代理类@EnableAspectJAutoProxy (exposeProxy = true)
+        // 然后通过下面方法获取代理对象，然后再调用 可以避免方法自调用造成的Transactional事务失效
+        PracticeSetServiceImpl proxy = (PracticeSetServiceImpl) AopContext.currentProxy();
+        // 如果练习id为空 就将该套卷的练习情况初始化为未完成并保存到数据库
+        if (Objects.isNull(req.getPracticeId())){
+            Long practiceId = proxy.insertPracticeDetail(req.getSetId());
+            // 并将新添加的练习id设置到返回对象中
+            practiceSubjectListVO.setPracticeId(practiceId);
+        } else {
+            // 如果不为空就将套卷的练习情况进行更新
+            proxy.updatePracticeDetail(req.getPracticeId());
+            // 接着查询套卷练习情况信息 将套卷练习用时和练习id设置到返回对象中
+            PracticeInfo practiceInfo =
+                    practiceInfoService.getById(req.getPracticeId());
+            practiceSubjectListVO.setTimeUse(practiceInfo.getTimeUse());
+            practiceSubjectListVO.setPracticeId(req.getPracticeId());
+        }
+        return practiceSubjectListVO;
+    }
+
+    /**
+     * @author: 32115
+     * @description: 更新套卷练习情况
+     * @date: 2024/6/5
+     * @param: practiceId
+     * @return: void
+     */
+    @Transactional
+    public void updatePracticeDetail(Long practiceId) {
+        PracticeInfo practiceInfo = new PracticeInfo();
+        practiceInfo.setId(practiceId);
+        practiceInfo.setSubmitTime(new Date());
+        practiceInfoService.updateById(practiceInfo);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 添加套卷练习情况信息
+     * @date: 2024/6/5
+     * @param: setId
+     * @return: Long
+     */
+    @Transactional
+    public Long insertPracticeDetail(Long setId) {
+        PracticeInfo practiceInfo = new PracticeInfo();
+        practiceInfo.setSetId(setId);
+        practiceInfo.setCompleteStatus(PracticeSetEnum.UN_COMPLETE.getCode());
+        practiceInfo.setTimeUse(PracticeConstant.TIME_USE);
+        practiceInfo.setSubmitTime(new Date());
+        practiceInfo.setCorrectRate(new BigDecimal("0.00"));
+        practiceInfoService.save(practiceInfo);
+        return practiceInfo.getId();
+    }
 
     /**
      * @author: 32115
@@ -132,14 +245,16 @@ public class PracticeSetServiceImpl extends
         this.save(practiceSet);
 
         // 接下来创建PracticeSetDetail对象 封装套卷下对应的题目信息并写入数据库
+        List<PracticeSetDetail> practiceSetDetailList = new ArrayList<>();
         practiceSubjectList.forEach(practiceSubjectDetailVO -> {
             PracticeSetDetail practiceSetDetail = new PracticeSetDetail();
             practiceSetDetail.setSetId(practiceSet.getId());
             practiceSetDetail.setSubjectId(practiceSubjectDetailVO.getSubjectId());
             practiceSetDetail.setSubjectType(practiceSubjectDetailVO.getSubjectType());
-            // 将套卷下对应的题目信息写入数据库
-            practiceSetDetailService.save(practiceSetDetail);
+            // 将套卷下对应的题目信息添加进列表 循环外一次性写入数据库 减少数据库交互
+            practiceSetDetailList.add(practiceSetDetail);
         });
+        practiceSetDetailService.saveBatch(practiceSetDetailList);
         practiceSetVO.setSetId(practiceSet.getId());
     }
 

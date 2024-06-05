@@ -3,7 +3,9 @@ package com.wxy.practice.server.controller;
 import com.google.common.base.Preconditions;
 import com.wxy.practice.api.common.Result;
 import com.wxy.practice.api.req.GetPracticeSubjectListReq;
+import com.wxy.practice.api.req.GetPracticeSubjectsReq;
 import com.wxy.practice.api.vo.PracticeSetVO;
+import com.wxy.practice.api.vo.PracticeSubjectListVO;
 import com.wxy.practice.api.vo.SpecialPracticeVO;
 import com.wxy.practice.server.aop.AopLogAnnotations;
 import com.wxy.practice.server.dto.PracticeSubjectDTO;
@@ -74,6 +76,34 @@ public class PracticeSetController {
             PracticeSetVO practiceSetVO = practiceSetService.addPracticeSet(practiceSubjectDTO);
             // 返回结果
             return Result.success(practiceSetVO);
+        } catch (IllegalArgumentException e) {
+            log.error("参数异常！错误原因{}", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        } catch (Exception e) {
+            log.error("获取练习题目列表异常！错误原因{}", e.getMessage(), e);
+            return Result.error("获取练习题目列表异常！");
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: 获取套卷以及套卷下题目信息
+     * @date: 2024/6/5
+     * @param: req
+     * @return: Result<PracticeSubjectListVO>
+     */
+    @RequestMapping("/getSubjects")
+    @AopLogAnnotations
+    public Result<PracticeSubjectListVO> getSubjectList(@RequestBody GetPracticeSubjectsReq req) {
+        try {
+            // 参数校验
+            Preconditions.checkArgument(!Objects.isNull(req), "参数不能为空！");
+            Preconditions.checkArgument(!Objects.isNull(req.getSetId()), "套卷id不能为空！");
+            // 调用service层方法
+            PracticeSubjectListVO practiceSubjectListVO =
+                    practiceSetService.getSubjectList(req);
+            // 返回结果
+            return Result.success(practiceSubjectListVO);
         } catch (IllegalArgumentException e) {
             log.error("参数异常！错误原因{}", e.getMessage(), e);
             return Result.error(e.getMessage());
