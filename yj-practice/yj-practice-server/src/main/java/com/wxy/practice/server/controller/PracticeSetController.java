@@ -1,12 +1,11 @@
 package com.wxy.practice.server.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.google.common.base.Preconditions;
+import com.mybatisflex.core.paginate.Page;
 import com.wxy.practice.api.common.Result;
-import com.wxy.practice.api.req.GetPracticeSubjectListReq;
-import com.wxy.practice.api.req.GetPracticeSubjectsReq;
-import com.wxy.practice.api.vo.PracticeSetVO;
-import com.wxy.practice.api.vo.PracticeSubjectListVO;
-import com.wxy.practice.api.vo.SpecialPracticeVO;
+import com.wxy.practice.api.req.*;
+import com.wxy.practice.api.vo.*;
 import com.wxy.practice.server.aop.AopLogAnnotations;
 import com.wxy.practice.server.dto.PracticeSubjectDTO;
 import com.wxy.practice.server.service.PracticeSetService;
@@ -87,7 +86,7 @@ public class PracticeSetController {
 
     /**
      * @author: 32115
-     * @description: 获取套卷以及套卷下题目信息
+     * @description: 获取套卷以及套卷下题目列表
      * @date: 2024/6/5
      * @param: req
      * @return: Result<PracticeSubjectListVO>
@@ -110,6 +109,93 @@ public class PracticeSetController {
         } catch (Exception e) {
             log.error("获取练习题目列表异常！错误原因{}", e.getMessage(), e);
             return Result.error("获取练习题目列表异常！");
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: 获取套卷下题目详细信息
+     * @date: 2024/6/6
+     * @param: req
+     * @return: Result<PracticeSubjectVO>
+     */
+    @RequestMapping("/getPracticeSubject")
+    @AopLogAnnotations
+    public Result<PracticeSubjectVO> getPracticeSubject(@RequestBody GetPracticeSubjectReq req){
+        try {
+            // 参数校验
+            Preconditions.checkArgument(!Objects.isNull(req), "参数不能为空！");
+            Preconditions.checkArgument(!Objects.isNull(req.getSubjectId()), "题目id不能为空！");
+            Preconditions.checkArgument(!Objects.isNull(req.getSubjectType()), "题目类型不能为空！");
+            // 封装查询参数
+            PracticeSubjectDTO practiceSubjectDTO = new PracticeSubjectDTO();
+            practiceSubjectDTO.setSubjectId(req.getSubjectId());
+            practiceSubjectDTO.setSubjectType(req.getSubjectType());
+            // 调用service层方法
+            PracticeSubjectVO practiceSubjectVO =
+                    practiceSetService.getPracticeSubject(practiceSubjectDTO);
+            // 返回结果
+            return Result.success(practiceSubjectVO);
+        } catch (IllegalArgumentException e) {
+            log.error("参数异常！错误原因{}", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        } catch (Exception e) {
+            log.error("获取练习详情异常！错误原因{}", e.getMessage(), e);
+            return Result.error("获取练习题目详情异常！");
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: 分页查询获取模拟套题内容
+     * @date: 2024/6/6 
+     * @param: req
+     * @return: Result<Page < PracticeSetVO>>
+     */
+    @RequestMapping("/getPreSetContent")
+    @AopLogAnnotations
+    public Result<Page<PracticeSetVO>> getPracticeSetContent(@RequestBody GetPreSetReq req){
+        try {
+            // 参数校验
+            Preconditions.checkArgument(!Objects.isNull(req), "参数不能为空！");
+            // 调用service层方法
+            Page<PracticeSetVO> practiceSetVOList =
+                    practiceSetService.getPracticeSetContent(req);
+            // 返回结果
+            return Result.success(practiceSetVOList);
+        } catch (IllegalArgumentException e) {
+            log.error("参数异常！错误原因{}", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        } catch (Exception e) {
+            log.error("获取模拟套题内容异常！错误原因{}", e.getMessage(), e);
+            return Result.error("获取模拟套题内容异常！");
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: 分页查询获取未完成的练题内容
+     * @date: 2024/6/6
+     * @param: req
+     * @return: Result<Page < UnCompletePracticeSetVO>>
+     */
+    @RequestMapping("/getUnCompletePractice")
+    @AopLogAnnotations
+    public Result<Page<UnCompletePracticeSetVO>> getUnCompletePractice(@RequestBody GetUnCompletePracticeReq req) {
+        try {
+            Preconditions.checkArgument(!Objects.isNull(req), "参数不能为空！");
+            Page<UnCompletePracticeSetVO> list =
+                    practiceSetService.getUnCompletePractice(req);
+            if (log.isInfoEnabled()) {
+                log.info("获取未完成练习内容出参{}", JSON.toJSONString(list));
+            }
+            return Result.success(list);
+        } catch (IllegalArgumentException e) {
+            log.error("参数异常！错误原因{}", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        } catch (Exception e) {
+            log.error("获取未完成练习内容异常！错误原因{}", e.getMessage(), e);
+            return Result.error("获取未完成练习内容异常！");
         }
     }
 }

@@ -34,4 +34,7 @@ public interface SubjectFeignService {
 
     @RequestMapping("/subject/label/getLabelById")
     Result<SubjectLabelDto> getLabelById(@RequestParam("id") Long id);
+
+    @RequestMapping("/subject/getSubjectInfoById")
+    Result<SubjectInfoDto> getSubjectInfoById(@RequestBody SubjectInfoDto subjectInfoDto);
 }

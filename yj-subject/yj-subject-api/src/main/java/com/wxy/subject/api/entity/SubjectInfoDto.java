@@ -73,5 +73,10 @@ public class SubjectInfoDto implements Serializable {
      */
     private List<String> assembleIds;
 
+    /**
+     * 题目答案选项列表
+     */
+    private List<SubjectOptionDto> optionList;
+
 }
 

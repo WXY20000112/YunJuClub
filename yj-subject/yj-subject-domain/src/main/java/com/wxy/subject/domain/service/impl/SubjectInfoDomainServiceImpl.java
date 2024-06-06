@@ -66,6 +66,39 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
 
     /**
      * @author: 32115
+     * @description: 根据题目id获取题目信息
+     * @date: 2024/6/6
+     * @param: subjectId
+     * @return: SubjectInfoBO
+     */
+    @Override
+    @AopLogAnnotations
+    public SubjectInfoBO getSubjectInfoById(SubjectInfoBO subjectInfoBO) {
+        return getSubjectInfoBO(subjectInfoBO);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 查询题目和选项信息
+     * @date: 2024/6/6
+     * @param: subjectInfoBO
+     * @return: SubjectInfoBO
+     */
+    private SubjectInfoBO getSubjectInfoBO(SubjectInfoBO subjectInfoBO) {
+        // 首先查询题目主表信息
+        SubjectInfo subjectInfo = subjectInfoService.getSubjectInfoById(subjectInfoBO.getId());
+        // 根据题目类型获取对应的处理器
+        SubjectTypeHandler handler = subjectTypeFactory.getHandler(subjectInfo.getSubjectType());
+        // 获取题目选项信息
+        SubjectFactoryBO subjectFactoryBO = handler.getBySubjectId(subjectInfo.getId());
+        // 封装BO
+        // 将factoryBo和Info转为Bo
+        return SubjectInfoBOConverter.CONVERTER
+                .convertInfoAndFactoryBoToBo(subjectFactoryBO, subjectInfo);
+    }
+
+    /**
+     * @author: 32115
      * @description: 获取题目列表
      * @date: 2024/6/4
      * @param: subjectCount
@@ -152,19 +185,10 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
     @Transactional
     @AopLogAnnotations
     public SubjectInfoBO getSubjectInfo(SubjectInfoBO subjectInfoBO) {
-        // 首先查询题目主表信息
-        SubjectInfo subjectInfo = subjectInfoService.getSubjectInfoById(subjectInfoBO.getId());
-        // 根据题目类型获取对应的处理器
-        SubjectTypeHandler handler = subjectTypeFactory.getHandler(subjectInfo.getSubjectType());
-        // 获取题目选项信息
-        SubjectFactoryBO subjectFactoryBO = handler.getBySubjectId(subjectInfo.getId());
-        // 封装BO
-        // 将factoryBo和Info转为Bo
-        SubjectInfoBO boResult = SubjectInfoBOConverter.CONVERTER
-                .convertInfoAndFactoryBoToBo(subjectFactoryBO, subjectInfo);
+        SubjectInfoBO boResult = getSubjectInfoById(subjectInfoBO);
         // 查询题目的标签信息
         List<SubjectLabel> subjectLabelList = subjectLabelService
-                .getLabelBySubjectId(subjectInfo.getId());
+                .getLabelBySubjectId(boResult.getId());
         // 封装labelNameList
         boResult.setLabelNameList(subjectLabelList.stream()
                 .map(SubjectLabel::getLabelName).toList());

@@ -1,8 +1,14 @@
 package com.wxy.practice.server.service.impl;
 
+import com.alibaba.fastjson2.util.DateUtils;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.wxy.practice.api.common.PageInfo;
 import com.wxy.practice.api.enums.SubjectTypeEnum;
 import com.wxy.practice.api.req.GetPracticeSubjectsReq;
+import com.wxy.practice.api.req.GetPreSetReq;
+import com.wxy.practice.api.req.GetUnCompletePracticeReq;
 import com.wxy.practice.api.vo.*;
 import com.wxy.practice.server.aop.AopLogAnnotations;
 import com.wxy.practice.server.config.PracticeConfig;
@@ -12,6 +18,7 @@ import com.wxy.practice.server.entity.PracticeDetail;
 import com.wxy.practice.server.entity.PracticeInfo;
 import com.wxy.practice.server.entity.PracticeSet;
 import com.wxy.practice.server.entity.PracticeSetDetail;
+import com.wxy.practice.server.enums.OrderTypeEnum;
 import com.wxy.practice.server.enums.PracticeSetEnum;
 import com.wxy.practice.server.enums.PracticeTypeEnum;
 import com.wxy.practice.server.enums.SubjectIsAnswerEnum;
@@ -36,6 +43,8 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.wxy.practice.server.entity.table.PracticeSetTableDef.PRACTICE_SET;
 
 /**
  * @program: YunJuClub-Flex
@@ -63,6 +72,145 @@ public class PracticeSetServiceImpl extends
 
     @Resource
     private PracticeInfoService practiceInfoService;
+
+    @Resource
+    private PracticeSetMapper practiceSetMapper;
+
+    /**
+     * @author: 32115
+     * @description: 分页查询获取未完成的练题内容
+     * @date: 2024/6/6
+     * @param: req
+     * @return: Page<UnCompletePracticeSetVO>
+     */
+    @Override
+    @AopLogAnnotations
+    public Page<UnCompletePracticeSetVO> getUnCompletePractice(GetUnCompletePracticeReq req) {
+        // 创建返回对象
+        Page<UnCompletePracticeSetVO> unCompletePracticeSetVOPage = new Page<>();
+        // 分页查询未完成的套卷信息
+        PageInfo pageInfo = req.getPageInfo();
+        Page<PracticeInfo> practiceInfoPage =
+                practiceInfoService.getPracticePage(pageInfo);
+        // 创建UnCompletePracticeSetVO集合存储分页查询的结果集
+        List<UnCompletePracticeSetVO> unCompletePracticeSetVOList = practiceInfoPage.getRecords()
+                .stream().map(practiceInfo -> {
+                    // 创建UnCompletePracticeSetVO对象 存储需要返回的信息
+                    UnCompletePracticeSetVO unCompletePracticeSetVO = new UnCompletePracticeSetVO();
+                    unCompletePracticeSetVO.setSetId(practiceInfo.getSetId());
+                    unCompletePracticeSetVO.setPracticeId(practiceInfo.getId());
+                    unCompletePracticeSetVO.setPracticeTime(DateUtils.format(practiceInfo.getSubmitTime(), "yyyy-MM-dd"));
+                    // 根据套卷id查询套卷信息
+                    PracticeSet practiceSet = this.getById(practiceInfo.getSetId());
+                    // 设置套卷名称
+                    unCompletePracticeSetVO.setTitle(practiceSet.getSetName());
+                    return unCompletePracticeSetVO;
+                }).toList();
+        // 将处理好的信息封装进要返回的分页对象中
+        unCompletePracticeSetVOPage.setRecords(unCompletePracticeSetVOList);
+        unCompletePracticeSetVOPage.setTotalRow(practiceInfoPage.getTotalRow());
+        unCompletePracticeSetVOPage.setPageNumber(practiceInfoPage.getPageNumber());
+        unCompletePracticeSetVOPage.setPageSize(practiceInfoPage.getPageSize());
+        unCompletePracticeSetVOPage.setTotalPage(practiceInfoPage.getTotalPage());
+        // 返回
+        return unCompletePracticeSetVOPage;
+    }
+
+    /**
+     * @author: 32115
+     * @description: 分页获取套卷列表
+     * @date: 2024/6/6
+     * @param: req
+     * @return: Page<PracticeSetVO>
+     */
+    @Override
+    @AopLogAnnotations
+    public Page<PracticeSetVO> getPracticeSetContent(GetPreSetReq req) {
+        // 创建返回对象
+        Page<PracticeSetVO> practiceSetVOPage = new Page<>();
+        // 获取分页信息
+        PageInfo pageInfo = req.getPageInfo();
+        Page<PracticeSet> practiceSetPage = getPracticeSetPage(req, pageInfo);
+        // 创建PracticeSetVO集合存储分页查询的结果集
+        List<PracticeSetVO> practiceSetVOList = practiceSetPage.getRecords()
+                .stream().map(practiceSet -> {
+                    PracticeSetVO practiceSetVO = new PracticeSetVO();
+                    practiceSetVO.setSetId(practiceSet.getId());
+                    practiceSetVO.setSetName(practiceSet.getSetName());
+                    practiceSetVO.setSetHeat(practiceSet.getSetHeat());
+                    practiceSetVO.setSetDesc(practiceSet.getSetDesc());
+                    return practiceSetVO;
+                }).toList();
+        // 封装要返回的分页对象
+        practiceSetVOPage.setRecords(practiceSetVOList);
+        practiceSetVOPage.setPageNumber(practiceSetPage.getPageNumber());
+        practiceSetVOPage.setPageSize(practiceSetPage.getPageSize());
+        practiceSetVOPage.setTotalPage(practiceSetPage.getTotalPage());
+        practiceSetVOPage.setTotalRow(practiceSetPage.getTotalRow());
+        // 返回
+        return practiceSetVOPage;
+    }
+
+    /**
+     * @author: 32115
+     * @description: 分页查询套题信息
+     * @date: 2024/6/6
+     * @param: req
+     * @param: pageInfo
+     * @return: Page<PracticeSet>
+     */
+    private Page<PracticeSet> getPracticeSetPage(GetPreSetReq req, PageInfo pageInfo) {
+        // 构建查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(PRACTICE_SET.DEFAULT_COLUMNS)
+                .from(PRACTICE_SET)
+                .where(PRACTICE_SET.SET_TYPE.eq(PracticeTypeEnum.PRESET_PRACTICE.getCode()))
+                .and(PRACTICE_SET.SET_NAME.like("%" + req.getSetName() + "%"));
+        // 根据不同的排序条件使用不同的字段进行排序
+        if (req.getOrderType() == OrderTypeEnum.ORDER_CREATE_TIME.getCode()){
+            queryWrapper.orderBy(PRACTICE_SET.CREATED_TIME.desc());
+        } else if (req.getOrderType() == OrderTypeEnum.ORDER_HEAT.getCode()) {
+            queryWrapper.orderBy(PRACTICE_SET.SET_HEAT.desc());
+        } else if (req.getOrderType() == OrderTypeEnum.ORDER_DEFAULT.getCode()){
+            queryWrapper.orderBy(PRACTICE_SET.SET_NAME.desc());
+        }
+        // 调用mapper进行分页查询
+        return practiceSetMapper.paginate(
+                        pageInfo.getPageNo(), pageInfo.getPageSize(), queryWrapper);
+    }
+
+    /**
+     * @author: 32115
+     * @description: 获取套卷下题目详细信息
+     * @date: 2024/6/6
+     * @param: practiceSubjectDTO
+     * @return: PracticeSubjectVO
+     */
+    @Override
+    @AopLogAnnotations
+    public PracticeSubjectVO getPracticeSubject(PracticeSubjectDTO practiceSubjectDTO) {
+        // 创建返回对象
+        PracticeSubjectVO practiceSubjectVO = new PracticeSubjectVO();
+        // 调用rpc根据题目id查询题目信息
+        SubjectInfoDto subjectInfoDto =
+                subjectCategoryRpc.getSubjectInfoById(practiceSubjectDTO);
+        // 设置题目名称和题目类型
+        practiceSubjectVO.setSubjectName(subjectInfoDto.getSubjectName());
+        practiceSubjectVO.setSubjectType(subjectInfoDto.getSubjectType());
+        // 如果查询的题目不是判断题 说明是单选或者多选 则将其选项信息填入practiceSubjectOptionVO对象中
+        if (practiceSubjectDTO.getSubjectType() != SubjectTypeEnum.JUDGE.getCode()) {
+            // 创建PracticeSubjectOptionVO集合 存储选项信息
+            List<PracticeSubjectOptionVO> practiceSubjectOptionVOList =
+                    subjectInfoDto.getOptionList().stream().map(subjectOptionDto -> {
+                        PracticeSubjectOptionVO practiceSubjectOptionVO = new PracticeSubjectOptionVO();
+                        practiceSubjectOptionVO.setOptionContent(subjectOptionDto.getOptionContent());
+                        practiceSubjectOptionVO.setOptionType(subjectOptionDto.getOptionType());
+                        return practiceSubjectOptionVO;
+                    }).toList();
+            practiceSubjectVO.setOptionList(practiceSubjectOptionVOList);
+        }
+        return practiceSubjectVO;
+    }
 
     /**
      * @author: 32115

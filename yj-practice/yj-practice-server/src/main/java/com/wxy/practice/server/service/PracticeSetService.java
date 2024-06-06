@@ -1,10 +1,11 @@
 package com.wxy.practice.server.service;
 
+import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
 import com.wxy.practice.api.req.GetPracticeSubjectsReq;
-import com.wxy.practice.api.vo.PracticeSetVO;
-import com.wxy.practice.api.vo.PracticeSubjectListVO;
-import com.wxy.practice.api.vo.SpecialPracticeVO;
+import com.wxy.practice.api.req.GetPreSetReq;
+import com.wxy.practice.api.req.GetUnCompletePracticeReq;
+import com.wxy.practice.api.vo.*;
 import com.wxy.practice.server.dto.PracticeSubjectDTO;
 import com.wxy.practice.server.entity.PracticeSet;
 
@@ -26,4 +27,13 @@ public interface PracticeSetService extends IService<PracticeSet> {
 
     // 获取套卷以及套卷下题目信息
     PracticeSubjectListVO getSubjectList(GetPracticeSubjectsReq req);
+
+    // 获取套卷下题目详细信息
+    PracticeSubjectVO getPracticeSubject(PracticeSubjectDTO practiceSubjectDTO);
+
+    // 分页获取套卷列表
+    Page<PracticeSetVO> getPracticeSetContent(GetPreSetReq req);
+
+    // 分页查询获取未完成的练题内容
+    Page<UnCompletePracticeSetVO> getUnCompletePractice(GetUnCompletePracticeReq req);
 }

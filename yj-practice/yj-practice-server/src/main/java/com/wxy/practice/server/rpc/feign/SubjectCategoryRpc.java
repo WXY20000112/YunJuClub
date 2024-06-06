@@ -113,4 +113,25 @@ public class SubjectCategoryRpc {
         // 返回数据
         return result.getData();
     }
+
+    /**
+     * @author: 32115
+     * @description: 根据id查询题目信息
+     * @date: 2024/6/6
+     * @param: subjectId
+     * @return: SubjectInfoDto
+     */
+    public SubjectInfoDto getSubjectInfoById(PracticeSubjectDTO practiceSubjectDTO) {
+        // 将查询条件封装到SubjectInfoDto中
+        SubjectInfoDto subjectInfoDto = new SubjectInfoDto();
+        subjectInfoDto.setId(practiceSubjectDTO.getSubjectId());
+        subjectInfoDto.setSubjectType(practiceSubjectDTO.getSubjectType());
+        // 调用远程接口
+        Result<SubjectInfoDto> result =
+                subjectFeignService.getSubjectInfoById(subjectInfoDto);
+        // 判断远程调用是否成功 不成功返回空集合
+        if (result.getCode() != 200) return new SubjectInfoDto();
+        // 返回数据
+        return result.getData();
+    }
 }

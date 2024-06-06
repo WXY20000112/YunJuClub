@@ -204,4 +204,31 @@ public class SubjectController {
             return Result.error(e.getMessage());
         }
     }
+
+    /**
+     * @author: 32115
+     * @description: feign调用 获取题目信息
+     * @date: 2024/6/6
+     * @param: subjectId
+     * @return: Result<SubjectInfoDto>
+     */
+    @RequestMapping("/getSubjectInfoById")
+    @AopLogAnnotations
+    Result<SubjectInfoDto> getSubjectInfoById(@RequestBody SubjectInfoDto subjectInfoDto){
+        try {
+            // DTO 转换 BO
+            SubjectInfoBO subjectInfoBO = SubjectInfoDtoConverter
+                    .CONVERTER.converterDtoToBo(subjectInfoDto);
+            // 调用domain层service进行查询
+            SubjectInfoBO bo = subjectInfoDomainService.getSubjectInfoById(subjectInfoBO);
+            // BO 转换 DTO
+            SubjectInfoDto dto = SubjectInfoDtoConverter
+                    .CONVERTER.converterBoToDto(bo);
+            // 返回结果
+            return Result.success(dto);
+        } catch (Exception e) {
+            log.error("Feign.SubjectController.getSubjectInfoById.error:{}:", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
 }

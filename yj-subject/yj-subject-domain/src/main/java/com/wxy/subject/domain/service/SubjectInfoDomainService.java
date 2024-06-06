@@ -33,4 +33,7 @@ public interface SubjectInfoDomainService {
     List<SubjectInfoBO> getSubjectInfoList(
             Integer subjectCount, Integer subjectType,
             List<Long> excludeSubjectIds, List<String> assembleIds);
+
+    // 根据题目id查询题目详情
+    SubjectInfoBO getSubjectInfoById(SubjectInfoBO subjectInfoBO);
 }
