@@ -2,7 +2,10 @@ package com.wxy.practice.server.mapper;
 
 import com.mybatisflex.core.BaseMapper;
 import com.wxy.practice.server.entity.PracticeDetail;
+import com.wxy.practice.server.entity.PracticeRank;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @program: YunJuClub-Flex
@@ -12,4 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface PracticeDetailMapper extends BaseMapper<PracticeDetail> {
+
+    // 获取练习排名
+    List<PracticeRank> getPracticeCount();
 }

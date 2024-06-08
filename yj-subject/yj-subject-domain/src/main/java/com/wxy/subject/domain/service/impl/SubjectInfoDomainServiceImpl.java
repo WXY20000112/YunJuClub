@@ -93,8 +93,15 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
         SubjectFactoryBO subjectFactoryBO = handler.getBySubjectId(subjectInfo.getId());
         // 封装BO
         // 将factoryBo和Info转为Bo
-        return SubjectInfoBOConverter.CONVERTER
+        SubjectInfoBO boResult = SubjectInfoBOConverter.CONVERTER
                 .convertInfoAndFactoryBoToBo(subjectFactoryBO, subjectInfo);
+        // 查询题目的标签信息
+        List<SubjectLabel> subjectLabelList = subjectLabelService
+                .getLabelBySubjectId(boResult.getId());
+        // 封装labelNameList
+        boResult.setLabelNameList(subjectLabelList.stream()
+                .map(SubjectLabel::getLabelName).toList());
+        return boResult;
     }
 
     /**
@@ -185,13 +192,7 @@ public class SubjectInfoDomainServiceImpl implements SubjectInfoDomainService {
     @Transactional
     @AopLogAnnotations
     public SubjectInfoBO getSubjectInfo(SubjectInfoBO subjectInfoBO) {
-        SubjectInfoBO boResult = getSubjectInfoById(subjectInfoBO);
-        // 查询题目的标签信息
-        List<SubjectLabel> subjectLabelList = subjectLabelService
-                .getLabelBySubjectId(boResult.getId());
-        // 封装labelNameList
-        boResult.setLabelNameList(subjectLabelList.stream()
-                .map(SubjectLabel::getLabelName).toList());
+        SubjectInfoBO boResult = getSubjectInfoBO(subjectInfoBO);
         // 从redis中查询点赞信息
         // 判断当前用户有没有点赞过这个题目
         boResult.setLiked(subjectLikedDomainService

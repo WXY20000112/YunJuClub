@@ -24,6 +24,24 @@ public class PracticeSetDetailServiceImpl extends
 
     /**
      * @author: 32115
+     * @description: 根据setId查询所有题目
+     * @date: 2024/6/8
+     * @param: setId
+     * @return: List<PracticeSetDetail>
+     */
+    @Override
+    public List<PracticeSetDetail> getPracticeSetDetailList(Long setId) {
+        // 构造查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(PRACTICE_SET_DETAIL.DEFAULT_COLUMNS)
+                .from(PRACTICE_SET_DETAIL)
+                .where(PRACTICE_SET_DETAIL.SET_ID.eq(setId))
+                .orderBy(PRACTICE_SET_DETAIL.SUBJECT_TYPE.desc());
+        return this.list(queryWrapper);
+    }
+
+    /**
+     * @author: 32115
      * @description: 根据setId查询详情
      * @date: 2024/6/5
      * @param: setId

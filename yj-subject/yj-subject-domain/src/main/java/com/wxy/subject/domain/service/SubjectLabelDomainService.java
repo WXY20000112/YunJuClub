@@ -29,4 +29,7 @@ public interface SubjectLabelDomainService {
 
     // 根据标签id查询标签信息
     SubjectLabelBO getLabelById(Long id);
+
+    // 根据题目id查询标签id
+    List<Long> getLabelIdsBySubjectId(Long subjectId);
 }

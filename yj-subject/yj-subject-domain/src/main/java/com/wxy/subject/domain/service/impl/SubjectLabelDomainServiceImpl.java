@@ -8,8 +8,10 @@ import com.wxy.subject.domain.entity.SubjectLabelBO;
 import com.wxy.subject.domain.service.SubjectLabelDomainService;
 import com.wxy.subject.infra.entity.SubjectCategory;
 import com.wxy.subject.infra.entity.SubjectLabel;
+import com.wxy.subject.infra.entity.SubjectMapping;
 import com.wxy.subject.infra.service.SubjectCategoryService;
 import com.wxy.subject.infra.service.SubjectLabelService;
+import com.wxy.subject.infra.service.SubjectMappingService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,26 @@ public class SubjectLabelDomainServiceImpl implements SubjectLabelDomainService 
 
     @Resource
     private SubjectCategoryService subjectCategoryService;
+
+    @Resource
+    private SubjectMappingService subjectMappingService;
+
+    /**
+     * @author: 32115
+     * @description: 根据题目id查询标签id
+     * @date: 2024/6/8
+     * @param: subjectId
+     * @return: List<Long>
+     */
+    @Override
+    public List<Long> getLabelIdsBySubjectId(Long subjectId) {
+        // 查询标签id
+        List<SubjectMapping> subjectMappingList =
+                subjectMappingService.getBySubjectId(subjectId);
+        // 提取labelId
+        return subjectMappingList.stream()
+                .map(SubjectMapping::getLabelId).toList();
+    }
 
     /**
      * @author: 32115

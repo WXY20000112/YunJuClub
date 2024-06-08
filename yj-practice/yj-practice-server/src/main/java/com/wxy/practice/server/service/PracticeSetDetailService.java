@@ -15,4 +15,7 @@ public interface PracticeSetDetailService extends IService<PracticeSetDetail> {
 
     // 根据setId查询
     List<PracticeSetDetail> getBySetId(Long setId);
+
+    // 根据setId查询所有题目
+    List<PracticeSetDetail> getPracticeSetDetailList(Long setId);
 }

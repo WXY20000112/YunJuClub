@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxy.practice.server.mapper.PracticeDetailMapper">
+
+    <resultMap type="com.wxy.practice.server.entity.PracticeDetail" id="PracticeDetailMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="practiceId" column="practice_id" jdbcType="INTEGER"/>
+        <result property="subjectId" column="subject_id" jdbcType="INTEGER"/>
+        <result property="subjectType" column="subject_type" jdbcType="INTEGER"/>
+        <result property="answerStatus" column="answer_status" jdbcType="INTEGER"/>
+        <result property="answerContent" column="answer_content" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 获取练习排名 -->
+    <select id="getPracticeCount" resultType="com.wxy.practice.server.entity.PracticeRank">
+        SELECT
+            COUNT(1) AS count,
+            created_by AS createdBy
+        FROM practice_info
+        WHERE is_deleted = 0
+        GROUP BY created_by
+        ORDER BY count desc
+        LIMIT 5;
+    </select>
+
+</mapper>
+

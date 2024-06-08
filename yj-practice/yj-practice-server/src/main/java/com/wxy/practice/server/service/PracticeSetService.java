@@ -34,6 +34,10 @@ public interface PracticeSetService extends IService<PracticeSet> {
     // 分页获取套卷列表
     Page<PracticeSetVO> getPracticeSetContent(GetPreSetReq req);
 
+    // 更新套卷热度
+    void updatePracticeSetHeat(Long setId);
+
     // 分页查询获取未完成的练题内容
     Page<UnCompletePracticeSetVO> getUnCompletePractice(GetUnCompletePracticeReq req);
+
 }

@@ -28,6 +28,11 @@ public class PracticeInfoServiceImpl
     @Resource
     private PracticeInfoMapper practiceInfoMapper;
 
+    @Override
+    public void deleteById(Long practiceId) {
+        practiceInfoMapper.deleteById(practiceId);
+    }
+
     /**
      * @author: 32115
      * @description: 分页查询获取练习信息

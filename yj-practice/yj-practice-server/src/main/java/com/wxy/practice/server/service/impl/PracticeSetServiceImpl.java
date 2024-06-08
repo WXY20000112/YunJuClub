@@ -3,6 +3,7 @@ package com.wxy.practice.server.service.impl;
 import com.alibaba.fastjson2.util.DateUtils;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.wxy.practice.api.common.PageInfo;
 import com.wxy.practice.api.enums.SubjectTypeEnum;
@@ -23,7 +24,7 @@ import com.wxy.practice.server.enums.PracticeSetEnum;
 import com.wxy.practice.server.enums.PracticeTypeEnum;
 import com.wxy.practice.server.enums.SubjectIsAnswerEnum;
 import com.wxy.practice.server.mapper.PracticeSetMapper;
-import com.wxy.practice.server.rpc.feign.SubjectCategoryRpc;
+import com.wxy.practice.server.rpc.feign.SubjectRpc;
 import com.wxy.practice.server.service.PracticeDetailService;
 import com.wxy.practice.server.service.PracticeInfoService;
 import com.wxy.practice.server.service.PracticeSetDetailService;
@@ -59,7 +60,7 @@ public class PracticeSetServiceImpl extends
         implements PracticeSetService {
 
     @Resource
-    private SubjectCategoryRpc subjectCategoryRpc;
+    private SubjectRpc subjectRpc;
 
     @Resource
     private PracticeConfig practiceConfig;
@@ -75,6 +76,23 @@ public class PracticeSetServiceImpl extends
 
     @Resource
     private PracticeSetMapper practiceSetMapper;
+
+    /**
+     * @author: 32115
+     * @description: 更新套卷热度
+     * @date: 2024/6/8
+     * @param: setId
+     * @return: void
+     */
+    @Transactional
+    @Override
+    public void updatePracticeSetHeat(Long setId) {
+        // 构建查询条件
+        UpdateChain.of(PracticeSet.class)
+                .setRaw(PracticeSet::getSetHeat, "`set_heat` + 1")
+                .where(PracticeSet::getId).eq(setId)
+                .update();
+    }
 
     /**
      * @author: 32115
@@ -193,7 +211,7 @@ public class PracticeSetServiceImpl extends
         PracticeSubjectVO practiceSubjectVO = new PracticeSubjectVO();
         // 调用rpc根据题目id查询题目信息
         SubjectInfoDto subjectInfoDto =
-                subjectCategoryRpc.getSubjectInfoById(practiceSubjectDTO);
+                subjectRpc.getSubjectInfoById(practiceSubjectDTO);
         // 设置题目名称和题目类型
         practiceSubjectVO.setSubjectName(subjectInfoDto.getSubjectName());
         practiceSubjectVO.setSubjectType(subjectInfoDto.getSubjectType());
@@ -366,7 +384,7 @@ public class PracticeSetServiceImpl extends
         for (Long categoryId : categoryIdSet) {
             if (i > 2) break;
             // 调用rpc方法获取分类信息
-            SubjectCategoryDto subjectCategoryDto = subjectCategoryRpc
+            SubjectCategoryDto subjectCategoryDto = subjectRpc
                     .getCategoryById(categoryId);
             // 拼接套卷名称
             setName.append(subjectCategoryDto.getCategoryName());
@@ -384,7 +402,7 @@ public class PracticeSetServiceImpl extends
         practiceSet.setSetName(setName.toString());
 
         // 根据标签id 调用rpc方法获取标签信息
-        SubjectLabelDto subjectLabelDto = subjectCategoryRpc
+        SubjectLabelDto subjectLabelDto = subjectRpc
                 .getLabelById(Long.valueOf(practiceSubjectDTO
                         .getAssembleIds().getFirst().split("-")[1]));
         // 设置一级分类id
@@ -470,7 +488,7 @@ public class PracticeSetServiceImpl extends
         practiceSubjectDTO.setExcludeSubjectIds(excludeSubjectIds);
         // 调用rpc接口查询题目信息
         List<SubjectInfoDto> subjectInfoDtoList =
-                subjectCategoryRpc.getSubjectInfoList(practiceSubjectDTO);
+                subjectRpc.getSubjectInfoList(practiceSubjectDTO);
         // 如果查询结果为空就返回
         if (CollectionUtils.isEmpty(subjectInfoDtoList)) return;
         // 遍历题目信息集合 封装PracticeSubjectDetailVO对象信息
@@ -501,7 +519,7 @@ public class PracticeSetServiceImpl extends
 
         // 查出所有题目类型为1，2，3的题目所属的二级分类信息
         List<SubjectCategoryDto> secondCategoryList =
-                subjectCategoryRpc.getCategoryBySubjectType();
+                subjectRpc.getCategoryBySubjectType();
         // 如果没有查到数据就返回空集合
         if (CollectionUtils.isEmpty(secondCategoryList)) return specialPracticeVOList;
 
@@ -511,7 +529,7 @@ public class PracticeSetServiceImpl extends
             specialPracticeVO.setPrimaryCategoryId(subjectCategoryDto.getParentId());
             // 根据二级分类的父id调用feign接口去查询一级分类信息
             SubjectCategoryDto resultSubjectCategory =
-                    subjectCategoryRpc.getCategoryById(subjectCategoryDto.getParentId());
+                    subjectRpc.getCategoryById(subjectCategoryDto.getParentId());
             // 设置一级分类名称
             specialPracticeVO.setPrimaryCategoryName(resultSubjectCategory.getCategoryName());
 
@@ -526,7 +544,7 @@ public class PracticeSetServiceImpl extends
 
             // 接下来根据二级分类id和题目类型查询二级分类下的标签信息
             List<SubjectLabelDto> subjectLabelDtoList =
-                    subjectCategoryRpc.getLabelByCategoryId(subjectCategoryDto.getId());
+                    subjectRpc.getLabelByCategoryId(subjectCategoryDto.getId());
             // 如果没有查询到数据就return
             if (CollectionUtils.isEmpty(subjectLabelDtoList)) return;
 

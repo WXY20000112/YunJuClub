@@ -183,4 +183,23 @@ public class SubjectLabelController {
             return Result.error(e.getMessage());
         }
     }
+
+    /**
+     * @author: 32115
+     * @description: feign调用 根据题目id查询标签id
+     * @date: 2024/6/8
+     * @param: subjectId
+     * @return: Result<List < Long>>
+     */
+    @RequestMapping("/getLabelIdsBySubjectId")
+    @AopLogAnnotations
+    Result<List<Long>> getLabelBySubjectId(@RequestParam("subjectId") Long subjectId){
+        try {
+            // 调用业务层
+            return Result.success(subjectLabelDomainService.getLabelIdsBySubjectId(subjectId));
+        } catch (Exception e) {
+            log.error("FeignClient.getLabelBySubjectId.error:{}:", e.getMessage(), e);
+            return Result.error(e.getMessage());
+        }
+    }
 }

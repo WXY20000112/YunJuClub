@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.mybatisflex.core.query.QueryMethods.distinct;
 import static com.wxy.subject.infra.entity.table.SubjectMappingTableDef.SUBJECT_MAPPING;
 
 /**
@@ -22,6 +23,24 @@ import static com.wxy.subject.infra.entity.table.SubjectMappingTableDef.SUBJECT_
 public class SubjectMappingServiceImpl
         extends ServiceImpl<SubjectMappingMapper, SubjectMapping>
         implements SubjectMappingService {
+
+    /**
+     * @author: 32115
+     * @description: 根据题目id查询映射关系
+     * @date: 2024/6/8
+     * @param: subjectId
+     * @return: List<SubjectMapping>
+     */
+    @Override
+    public List<SubjectMapping> getBySubjectId(Long subjectId) {
+        // 构造查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(distinct(SUBJECT_MAPPING.LABEL_ID),
+                        SUBJECT_MAPPING.SUBJECT_ID)
+                .from(SUBJECT_MAPPING)
+                .where(SUBJECT_MAPPING.SUBJECT_ID.eq(subjectId));
+        return this.list(queryWrapper);
+    }
 
     /**
      * @author: 32115

@@ -19,7 +19,7 @@ import java.util.List;
  * @create: 2024-05-23 18:15
  */
 @Component
-public class SubjectCategoryRpc {
+public class SubjectRpc {
 
     @Resource
     private SubjectFeignService subjectFeignService;
@@ -131,6 +131,23 @@ public class SubjectCategoryRpc {
                 subjectFeignService.getSubjectInfoById(subjectInfoDto);
         // 判断远程调用是否成功 不成功返回空集合
         if (result.getCode() != 200) return new SubjectInfoDto();
+        // 返回数据
+        return result.getData();
+    }
+
+    /**
+     * @author: 32115
+     * @description: 根据题目id查询标签id
+     * @date: 2024/6/8
+     * @param: subjectId
+     * @return: List<Long>
+     */
+    public List<Long> getLabelIdsBySubjectId(Long subjectId) {
+        // 调用远程接口
+        Result<List<Long>> result =
+                subjectFeignService.getLabelBySubjectId(subjectId);
+        // 判断远程调用是否成功 不成功返回空集合
+        if (result.getCode() != 200) return Collections.emptyList();
         // 返回数据
         return result.getData();
     }

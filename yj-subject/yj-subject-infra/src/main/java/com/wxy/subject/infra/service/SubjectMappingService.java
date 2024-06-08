@@ -19,4 +19,7 @@ public interface SubjectMappingService extends IService<SubjectMapping> {
 
     // 批量添加映射关系
     Boolean addSubjectMapping(List<SubjectMapping> subjectMappingList);
+
+    // 根据题目id查询映射关系
+    List<SubjectMapping> getBySubjectId(Long subjectId);
 }

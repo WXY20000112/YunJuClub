@@ -15,4 +15,7 @@ public interface PracticeInfoService extends IService<PracticeInfo> {
 
     // 分页查询
     Page<PracticeInfo> getPracticePage(PageInfo pageInfo);
+
+    // 根据练习id删除
+    void deleteById(Long practiceId);
 }

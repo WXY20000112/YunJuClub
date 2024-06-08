@@ -78,5 +78,10 @@ public class SubjectInfoDto implements Serializable {
      */
     private List<SubjectOptionDto> optionList;
 
+    /**
+     * 题目所属标签名称列表
+     */
+    private List<String> labelNameList;
+
 }
 
