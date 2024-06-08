@@ -26,7 +26,7 @@ public class LoginInterceptor implements GlobalFilter {
         // 获取请求体参数
         ServerHttpRequest.Builder mutate = request.mutate();
         // 获取请求路径并判断是不是登录请求 是的话直接放行
-        if (request.getURI().getPath().equals("/auth/user/doLogin")) {
+        if (request.getURI().getPath().equals("/user/doLogin")) {
             return chain.filter(exchange);
         }
         // 使用Satoken获取token中的loginId

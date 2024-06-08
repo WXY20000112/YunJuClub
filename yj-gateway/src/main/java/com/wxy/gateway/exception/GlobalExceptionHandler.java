@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
     @Nonnull
     public Mono<Void> handle(ServerWebExchange exchange, @Nonnull Throwable throwable) {
         // 获取请求信息
-        // ServerHttpRequest serverHttpRequest = exchange.getRequest();
+        ServerHttpRequest serverHttpRequest = exchange.getRequest();
         // 获取响应信息
         ServerHttpResponse serverHttpResponse = exchange.getResponse();
         // 设置状态码和提示信息
@@ -41,6 +42,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
             code = 401;
             msg = "该用户无权限";
         }else {
+            log.error("Exception:", throwable);
             code = 500;
             msg = "服务器繁忙";
         }
