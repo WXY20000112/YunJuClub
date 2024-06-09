@@ -81,6 +81,12 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.wxy</groupId>
+            <artifactId>yj-subject-application-mq</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <!-- maven打包插件配置 -->

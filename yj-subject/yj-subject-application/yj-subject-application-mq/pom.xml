@@ -5,21 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.wxy</groupId>
-        <artifactId>yj-subject</artifactId>
+        <artifactId>yj-subject-application</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>yj-subject-application</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>yj-subject-application-controller</module>
-        <module>yj-subject-application-mq</module>
-    </modules>
+    <artifactId>yj-subject-application-mq</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wxy</groupId>
+            <artifactId>yj-subject-domain</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>
