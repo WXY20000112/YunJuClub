@@ -5,6 +5,9 @@ import com.wxy.auth.api.entity.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * @program: YunJuClub-Flex
@@ -17,4 +20,7 @@ public interface AuthUserFeignService {
 
     @RequestMapping("/user/getUserInfo")
     Result<AuthUserDto> getUserInfo(@RequestBody AuthUserDto authUserDto);
+
+    @RequestMapping("/user/getUserInfoList")
+    Result<List<AuthUserDto>> getUserInfoList(@RequestParam("userNameList") List<String> userNameList);
 }

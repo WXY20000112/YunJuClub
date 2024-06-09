@@ -5,6 +5,8 @@ import com.wxy.auth.infra.entity.AuthUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthUserBOConverter
@@ -21,4 +23,7 @@ public interface AuthUserBOConverter {
 
     // 实体类 -> Bo
     AuthUserBO converterEntityToBo(AuthUser authUser);
+
+    // 实体类列表 -> Bo列表
+    List<AuthUserBO> converterEntityListToBoList(List<AuthUser> authUserList);
 }

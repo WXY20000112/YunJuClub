@@ -56,6 +56,23 @@ public class AuthUserDomainServiceImpl implements AuthUserDomainService {
 
     /**
      * @author: 32115
+     * @description: 根据用户名批量获取用户信息
+     * @date: 2024/6/9
+     * @param: userNameList
+     * @return: List<AuthUserBO>
+     */
+    @Override
+    public List<AuthUserBO> getUserInfoListByUserName(List<String> userNameList) {
+        // 获取用户信息
+        List<AuthUser> authUserList =
+                authUserService.getUserInfoListByUserName(userNameList);
+        // Entity 转换成 Bo
+        return AuthUserBOConverter.CONVERTER
+                .converterEntityListToBoList(authUserList);
+    }
+
+    /**
+     * @author: 32115
      * @description: 获取用户信息
      * @date: 2024/5/21
      * @param: authUserBO

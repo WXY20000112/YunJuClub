@@ -3,6 +3,8 @@ package com.wxy.auth.infra.service;
 import com.mybatisflex.core.service.IService;
 import com.wxy.auth.infra.entity.AuthUser;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthUserService
@@ -28,4 +30,7 @@ public interface AuthUserService extends IService<AuthUser> {
 
     // 根据用户名查询用户信息
     AuthUser getUserInfoByUserName(AuthUser authUser);
+
+    // 根据用户名查询用户信息列表
+    List<AuthUser> getUserInfoListByUserName(List<String> userNameList);
 }

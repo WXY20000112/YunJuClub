@@ -5,6 +5,8 @@ import com.wxy.auth.domain.entity.AuthUserBO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthUserDtoConverter
@@ -21,4 +23,7 @@ public interface AuthUserDtoConverter {
 
     // AuthUserBO转AuthUserDto
     AuthUserDto converterBoToDto(AuthUserBO authUserBO);
+
+    // AuthUserBOList转AuthUserDtoList
+    List<AuthUserDto> converterBoListToDtoList(List<AuthUserBO> authUserBOList);
 }

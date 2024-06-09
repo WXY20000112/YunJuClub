@@ -4,6 +4,8 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import com.wxy.auth.api.entity.Result;
 import com.wxy.auth.domain.entity.AuthUserBO;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthUserDomainService
@@ -29,4 +31,7 @@ public interface AuthUserDomainService {
 
     // 获取用户信息
     AuthUserBO getUserInfo(AuthUserBO authUserBO);
+
+    // 根据用户名批量获取用户信息
+    List<AuthUserBO> getUserInfoListByUserName(List<String> userNameList);
 }

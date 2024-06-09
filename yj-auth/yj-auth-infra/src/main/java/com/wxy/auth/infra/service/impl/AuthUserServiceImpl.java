@@ -9,6 +9,8 @@ import com.wxy.auth.infra.service.AuthUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.wxy.auth.infra.entity.table.AuthUserTableDef.AUTH_USER;
 
 /**
@@ -24,6 +26,23 @@ public class AuthUserServiceImpl
 
     @Resource
     private AuthUserMapper authUserMapper;
+
+    /**
+     * @author: 32115
+     * @description: 根据用户名获取用户信息列表
+     * @date: 2024/6/9
+     * @param: userNameList
+     * @return: List<AuthUser>
+     */
+    @Override
+    public List<AuthUser> getUserInfoListByUserName(List<String> userNameList) {
+        // 构建查询条件
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .select(AUTH_USER.DEFAULT_COLUMNS)
+                .from(AUTH_USER)
+                .where(AUTH_USER.USER_NAME.in(userNameList));
+        return this.list(queryWrapper);
+    }
 
     /**
      * @author: 32115

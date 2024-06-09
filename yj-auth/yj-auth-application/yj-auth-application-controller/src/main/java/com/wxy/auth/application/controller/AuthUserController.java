@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @program: YunJuClub-Flex
  * @description: AuthUserController
@@ -196,6 +198,29 @@ public class AuthUserController {
             return Result.success("退出成功");
         } catch (Exception e) {
             log.error("Exception:", e);
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * @author: 32115
+     * @description: feign 根据用户名集合批量获取用户信息
+     * @date: 2024/6/9
+     * @param: userNameList
+     * @return: Result<List < AuthUserDto>>
+     */
+    @RequestMapping("/getUserInfoList")
+    @AopLogAnnotations
+    Result<List<AuthUserDto>> getUserInfoList(@RequestParam("userNameList") List<String> userNameList){
+        try {
+            // 调用domain层service
+            List<AuthUserBO> authUserBOList =
+                    authUserDomainService.getUserInfoListByUserName(userNameList);
+            // 转换为Dto
+            return Result.success(AuthUserDtoConverter
+                    .CONVERTER.converterBoListToDtoList(authUserBOList));
+        } catch (Exception e) {
+            log.error("FeignClient.AuthUserController.getUserInfoList.error:{}", e.getMessage(), e);
             return Result.error(e.getMessage());
         }
     }
