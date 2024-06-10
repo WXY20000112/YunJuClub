@@ -29,7 +29,7 @@ public class ShareMessage implements Serializable {
      * 主键
      */
     @Id(keyType = KeyType.None)
-    private Integer id;
+    private Long id;
 
     /**
      * 来自人

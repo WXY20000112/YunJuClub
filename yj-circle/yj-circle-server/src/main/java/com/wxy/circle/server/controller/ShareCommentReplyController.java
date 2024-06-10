@@ -1,16 +1,20 @@
 package com.wxy.circle.server.controller;
 
 import com.google.common.base.Preconditions;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.wxy.circle.api.common.Result;
 import com.wxy.circle.api.req.GetShareCommentReq;
 import com.wxy.circle.api.req.RemoveShareCommentReq;
 import com.wxy.circle.api.req.SaveShareCommentReplyReq;
 import com.wxy.circle.api.vo.ShareCommentReplyVO;
 import com.wxy.circle.server.aop.AopLogAnnotations;
+import com.wxy.circle.server.entity.ShareCommentReply;
 import com.wxy.circle.server.entity.ShareMoment;
 import com.wxy.circle.server.sensitive.WordFilter;
 import com.wxy.circle.server.service.ShareCommentReplyService;
+import com.wxy.circle.server.service.ShareMessageService;
 import com.wxy.circle.server.service.ShareMomentService;
+import com.wxy.circle.server.utils.ThreadLocalUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.wxy.circle.server.entity.table.ShareCommentReplyTableDef.SHARE_COMMENT_REPLY;
 
 /**
  * @program: YunJuClub-Flex
@@ -39,6 +45,9 @@ public class ShareCommentReplyController {
 
     @Resource
     private WordFilter wordFilter;
+
+    @Resource
+    private ShareMessageService shareMessageService;
 
     /**
      * @author: 32115
@@ -64,8 +73,23 @@ public class ShareCommentReplyController {
             // 检查敏感词
             wordFilter.check(req.getContent());
             // 发布评论
-            return shareCommentReplyService.insertShareCommentReply(req) ?
-                    Result.success() : Result.error("发布评论失败！");
+            Boolean result = shareCommentReplyService
+                    .insertShareCommentReply(req);
+            // 评论发布后给目标用户推送提醒消息 websocket实现
+            if (req.getReplyType() == 1){
+                shareMessageService.comment(ThreadLocalUtil.getLoginId(),
+                        moment.getCreatedBy(), moment.getId());
+            } else {
+                // 查询回复信息
+                QueryWrapper wrapper = QueryWrapper.create()
+                        .select(SHARE_COMMENT_REPLY.DEFAULT_COLUMNS)
+                        .from(SHARE_COMMENT_REPLY)
+                        .where(SHARE_COMMENT_REPLY.ID.eq(req.getTargetId()));
+                ShareCommentReply shareCommentReply = shareCommentReplyService.getOne(wrapper);
+                shareMessageService.reply(ThreadLocalUtil.getLoginId(),
+                        shareCommentReply.getCreatedBy(), moment.getId());
+            }
+            return Result.success(result);
         } catch (IllegalArgumentException e) {
             log.error("参数异常！错误原因{}", e.getMessage(), e);
             return Result.error(e.getMessage());
