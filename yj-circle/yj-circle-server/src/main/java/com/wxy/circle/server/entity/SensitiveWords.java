@@ -3,7 +3,6 @@ package com.wxy.circle.server.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
-import com.wxy.circle.server.listener.MyInsertAndUpdateListener;
 import lombok.Data;
 
 import java.io.Serial;
@@ -16,9 +15,7 @@ import java.io.Serializable;
  * @create: 2024-06-09 16:17
  */
 @Data
-@Table(value = "sensitive_words",
-        onUpdate = MyInsertAndUpdateListener.class,
-        onInsert = MyInsertAndUpdateListener.class)
+@Table(value = "sensitive_words")
 public class SensitiveWords implements Serializable {
 
     @Serial

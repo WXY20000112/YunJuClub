@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.wxy.auth.api.entity.AuthUserDto;
 import com.wxy.circle.api.req.GetShareMomentReq;
@@ -42,6 +43,22 @@ public class ShareMomentServiceImpl
 
     @Resource
     private AuthUserRpc authUserRpc;
+
+    /**
+     * @author: 32115
+     * @description: 减少回复数量
+     * @date: 2024/6/10
+     * @param: momentId
+     * @param: count
+     * @return: void
+     */
+    @Override
+    public void decrReplyCount(Long momentId, int count) {
+        UpdateChain.of(ShareMoment.class)
+                .setRaw(ShareMoment::getReplyCount, "`reply_count` - "+ count)
+                .where(SHARE_MOMENT.ID.eq(momentId))
+                .update();
+    }
 
     /**
      * @author: 32115

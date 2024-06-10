@@ -6,13 +6,16 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Getter
+
 public abstract class TreeNode {
 
     /**
      * 当前节点id
      */
     public abstract Long getNodeId();
+
+    public TreeNode() {
+    }
 
     /**
      * 父级节点id
@@ -22,16 +25,19 @@ public abstract class TreeNode {
     /**
      * 是否根节点
      */
+    @Getter
     private Boolean rootNode;
 
     /**
      * 是否叶子节点
      **/
+    @Getter
     private Boolean leafNode;
 
     /**
      * 子节点数据
      **/
+    @Getter
     private List<TreeNode> children;
 
     /**

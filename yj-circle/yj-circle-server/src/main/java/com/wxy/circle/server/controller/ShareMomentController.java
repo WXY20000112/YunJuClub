@@ -9,6 +9,7 @@ import com.wxy.circle.api.req.SaveMomentCircleReq;
 import com.wxy.circle.api.vo.ShareMomentVO;
 import com.wxy.circle.server.aop.AopLogAnnotations;
 import com.wxy.circle.server.entity.ShareCircle;
+import com.wxy.circle.server.sensitive.WordFilter;
 import com.wxy.circle.server.service.ShareCircleService;
 import com.wxy.circle.server.service.ShareMomentService;
 import jakarta.annotation.Resource;
@@ -36,6 +37,9 @@ public class ShareMomentController {
     @Resource
     private ShareCircleService shareCircleService;
 
+    @Resource
+    private WordFilter wordFilter;
+
     /**
      * @author: 32115
      * @description: 发布圈子内容
@@ -55,6 +59,8 @@ public class ShareMomentController {
             Preconditions.checkArgument((Objects.nonNull(data) && data.getParentId() != -1), "非法圈子ID！");
             Preconditions.checkArgument((Objects.nonNull(req.getContent()) ||
                     Objects.nonNull(req.getPicUrlList())), "圈子内容或图片不能为空！");
+            // 敏感词校验
+            wordFilter.check(req.getContent());
             return shareMomentService.insertShareMoment(req) ?
                     Result.success() : Result.error("发布内容失败！");
         } catch (IllegalArgumentException e) {

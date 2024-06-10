@@ -1,10 +1,8 @@
-package com.wxy.circle.server.entity;
+package com.wxy.circle.server.dto;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
-import com.wxy.circle.server.listener.MyInsertAndUpdateListener;
-import lombok.Data;
+import com.wxy.circle.api.common.TreeNode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,11 +14,9 @@ import java.util.Date;
  * @author: 32115
  * @create: 2024-06-09 16:19
  */
-@Data
-@Table(value = "share_comment_reply",
-        onUpdate = MyInsertAndUpdateListener.class,
-        onInsert = MyInsertAndUpdateListener.class)
-public class ShareCommentReply implements Serializable {
+@Getter
+@Setter
+public class ShareCommentReplyDto extends TreeNode implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 179082276200522947L;
@@ -28,7 +24,6 @@ public class ShareCommentReply implements Serializable {
     /**
      * 评论ID
      */
-    @Id(keyType = KeyType.None)
     private Long id;
 
     /**
@@ -108,4 +103,14 @@ public class ShareCommentReply implements Serializable {
 
 
     private Long parentId;
+
+    @Override
+    public Long getNodeId() {
+        return id;
+    }
+
+    @Override
+    public Long getNodePId() {
+        return parentId;
+    }
 }

@@ -24,4 +24,7 @@ public interface ShareMomentService extends IService<ShareMoment> {
 
     // 删除圈子内容
     Boolean removeMoment(RemoveShareMomentReq req);
+
+    // 减少回复数量
+    void decrReplyCount(Long momentId, int count);
 }

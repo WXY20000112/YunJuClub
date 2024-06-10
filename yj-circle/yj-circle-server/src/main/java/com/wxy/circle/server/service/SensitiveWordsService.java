@@ -10,4 +10,10 @@ import com.wxy.circle.server.entity.SensitiveWords;
  * @create: 2024-06-09 16:26
  */
 public interface SensitiveWordsService extends IService<SensitiveWords> {
+
+    // 删除
+    Boolean deleteById(Long id);
+
+    // 添加
+    Boolean saveSensitiveWords(String words, Integer type);
 }
